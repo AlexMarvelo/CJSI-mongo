@@ -1,9 +1,14 @@
 var express = require('express');
 var router = express.Router();
 
-/* GET users listing. */
+var props = {
+  appTitle: 'OMDb Hero',
+}
+
+/* GET home page. */
 router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+  props.pageTitle = 'OMDb Hero | Home'
+  res.render('index', props)
 });
 
 module.exports = router;

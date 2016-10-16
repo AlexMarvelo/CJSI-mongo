@@ -1,5 +1,9 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  #alert-block-container.row
+  include components/jumbotron.jade
+  hr
+  #movies-container-favourite.row.text-center
+  #movies-container.row.text-center
+  nav#pagination-container.text-center(aria-label='Page navigation')
