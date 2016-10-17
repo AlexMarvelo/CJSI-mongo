@@ -45,12 +45,18 @@ h1 {
   display: none;
 }
 
-.thumbnail-favourite .btn-favourite-text-remove {
+.thumbnail-favourite .btn-favourite-text-remove,
+.btn-favourite.active .btn-favourite-text-remove {
   display: inline;
 }
 
-.thumbnail-favourite .btn-favourite-text-add{
+.thumbnail-favourite .btn-favourite-text-add,
+.btn-favourite.active .btn-favourite-text-add {
   display: none;
+}
+
+.btn-container {
+  margin-top: 15px;
 }
 
 @media (min-width: 1200px) {

@@ -1,10 +1,15 @@
 {
     "env": {
+        "browser": true,
         "node": true,
         "commonjs": true,
         "es6": true
     },
-    "extends": "eslint:recommended",
+    "extends": ["eslint:recommended"],
+    "globals": {
+      "ActiveXObject": true,
+      "angular": true
+    },
     "rules": {
         "indent": [
             "error",
@@ -26,5 +31,8 @@
           "error",
           { "allow": ["log", "error"] }
         ]
+    },
+    "parserOptions": {
+        "sourceType": "module"
     }
 }

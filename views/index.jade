@@ -1,9 +1,14 @@
-extends layout
-
-block content
-  #alert-block-container.row
-  include components/jumbotron.jade
-  hr
-  #movies-container-favourite.row.text-center
-  #movies-container.row.text-center
-  nav#pagination-container.text-center(aria-label='Page navigation')
+doctype html
+html(lang='en')
+  head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    title= pageTitle
+    base(href='/')
+    link(href='styles.bundle.css', rel='stylesheet')
+    link(href='images/favicon.ico' rel='shortcut icon')
+  body(ng-controller='OMDbHero.Controller as MainCtrl')
+    navbar
+    div(ng-view='')
+    script(type='text/javascript', src='main.bundle.js')
