@@ -2,6 +2,7 @@ var fetch = require('node-fetch');
 var Movie = require('../models/movie');
 
 var OMDbURL = 'http://www.omdbapi.com';
+const itemsPerPage = 10;
 
 function getSearchRequestData(qObj) {
   var dbQuery = {
@@ -9,13 +10,14 @@ function getSearchRequestData(qObj) {
   };
   if (qObj.y) dbQuery.Year = qObj.y;
   if (qObj.type) dbQuery.Type = qObj.type;
+  var page = qObj.page || 1;
   return Movie.find(dbQuery).exec()
     .then(movies => {
       if (!movies.length) {
         return getRequestedDataFromOMDb(qObj);
       }
       return {
-        Search: movies,
+        Search: movies.slice((page-1)*itemsPerPage, page*itemsPerPage),
         totalResults: movies.length,
         Response: 'True'
       };
