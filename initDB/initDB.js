@@ -17,7 +17,7 @@ function insertBaseData() {
 }
 
 function initDB() {
-  Movie.find({})
+  Movie.find({}).exec()
     .then(movies => movies.length)
     .then(amount => {
       if (amount) return;

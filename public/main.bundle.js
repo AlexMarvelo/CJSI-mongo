@@ -212,7 +212,7 @@
 	      var byId = qObj.hasOwnProperty('i');
 	      var byTitle = qObj.hasOwnProperty('t');
 	      if (!searchQuery && !byId && !byTitle) return;
-	      var result = _config2.default.domain + '?apikey=' + _config2.default.api + '&';
+	      var result = _config2.default.domain + '?';
 	      for (var key in qObj) {
 	        if (!qObj.hasOwnProperty(key)) continue;
 	        result += key + '=' + qObj[key].replace(' ', '+') + '&';
@@ -373,7 +373,7 @@
 	  value: true
 	});
 	exports.default = {
-	  domain: 'http://www.omdbapi.com/',
+	  domain: 'http://localhost:3000/',
 	  api: '6f0a67d0',
 	  cardsPerPage: 10
 	};
