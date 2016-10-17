@@ -3,32 +3,33 @@ var Movie = require('../models/movie');
 
 var OMDbURL = 'http://www.omdbapi.com';
 
-function getSearchRequestData(jObj) {
-  var result = Movie.find({}).exec()
+function getSearchRequestData(qObj) {
+  var dbQuery = {
+    Title: new RegExp(`.*${qObj.s}.*`, 'i')
+  };
+  return Movie.find(dbQuery).exec()
     .then(movies => {
-      console.log(`results length: ${movies.length}`);
-      if (!movies.length) result = getRequestedDataFormOMDb(jObj);
+      if (!movies.length) {
+        return getRequestedDataFromOMDb(qObj);
+      }
       return {
         Search: movies,
         totalResults: movies.length,
-        Response: true
+        Response: 'True'
       };
-    })
-    .catch(console.error);
-  return result;
+    });
 }
 
-function getRequestedDataFormOMDb(jObj) {
-  return fetch(`${OMDbURL}/${getQString(jObj)}`)
+function getRequestedDataFromOMDb(qObj) {
+  return fetch(`${OMDbURL}/${getQString(qObj)}`)
     .then(res => res.text())
-    .then(JSON.parse)
-    .catch(console.error);
+    .then(JSON.parse);
 }
 
-function getQString(jObj) {
+function getQString(qObj) {
   let qString = '?';
-  for (let prop in jObj) {
-    qString += `${prop}=${jObj[prop]}&`;
+  for (let prop in qObj) {
+    qString += `${prop}=${qObj[prop]}&`;
   }
   qString = qString.slice(0, -1).replace(' ', '+');
   return qString;

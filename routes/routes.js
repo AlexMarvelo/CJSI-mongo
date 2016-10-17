@@ -12,7 +12,10 @@ router.get('/', function(req, res) {
     getSearchRequestData(req.query)
       .then(JSON.stringify)
       .then(data => res.send(data))
-      .catch(error => res.send(error));
+      .catch(error => {
+        res.send(error);
+        console.error(error);
+      });
     return;
   }
   props.pageTitle = 'OMDb Hero | Home';
