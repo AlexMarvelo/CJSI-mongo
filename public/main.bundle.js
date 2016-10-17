@@ -45,13 +45,13 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	
+
 	var _search = __webpack_require__(1);
-	
+
 	var _search2 = _interopRequireDefault(_search);
-	
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
+
 	var movieSearch = new _search2.default({
 	  searchBlockId: 'search-group',
 	  moviesContainerId: 'movies-container',
@@ -64,27 +64,27 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	
+
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	
+
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
-	
+
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
+
 	var _config = __webpack_require__(2);
-	
+
 	var _config2 = _interopRequireDefault(_config);
-	
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
+
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
+
 	var SearchEngine = function () {
 	  function SearchEngine(setup) {
 	    _classCallCheck(this, SearchEngine);
-	
+
 	    this.form = document.querySelector('form[name="' + setup.searchBlockId + '"]');
 	    if (!this.form) return;
 	    this.input = this.form.querySelector('input[name="search"]');
@@ -96,13 +96,13 @@
 	    this.favContainer = document.getElementById(setup.favMoviesContainerId);
 	    this.currentPage = 0;
 	    this.favList = [];
-	
+
 	    this.form.addEventListener('submit', this.searchMovies.bind(this));
-	
+
 	    this.container.addEventListener('click', this.handleFavourite.bind(this));
 	    this.favContainer.addEventListener('click', this.handleFavourite.bind(this));
 	  }
-	
+
 	  _createClass(SearchEngine, [{
 	    key: 'handleFavourite',
 	    value: function handleFavourite(event) {
@@ -149,7 +149,7 @@
 	    key: 'handleQuery',
 	    value: function handleQuery(queryString) {
 	      var _this = this;
-	
+
 	      if (!queryString.length) return;
 	      var self = this;
 	      var promise = new Promise(function (resolve, reject) {
@@ -195,7 +195,7 @@
 	    key: 'updateMoviesList',
 	    value: function updateMoviesList(data) {
 	      var _this2 = this;
-	
+
 	      this.container.innerHTML = '';
 	      this.favList.forEach(function (movie) {
 	        _this2.pushMovieCardToContainer(movie, true);
@@ -224,7 +224,7 @@
 	    key: 'pushMovieCardToContainer',
 	    value: function pushMovieCardToContainer(card) {
 	      var favourite = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
-	
+
 	      if (!favourite && this.inFavourites(card.imdbID) !== -1) return;
 	      favourite = favourite && this.inFavourites(card.imdbID) !== -1;
 	      var cardContainer = document.createElement('DIV');
@@ -281,7 +281,7 @@
 	    key: 'setPagination',
 	    value: function setPagination(totalCardsAmount) {
 	      var _this3 = this;
-	
+
 	      // this.paginationContainer
 	      var list = this.paginationContainer.querySelector('ul.pagination');
 	      if (!list) {
@@ -349,13 +349,13 @@
 	      return movieIndex;
 	    }
 	  }]);
-	
+
 	  return SearchEngine;
 	}();
-	
+
 	exports.default = SearchEngine;
-	
-	
+
+
 	function findAncestor(el, cls) {
 	  while (!el.classList.contains(cls)) {
 	    el = el.parentElement;
@@ -368,7 +368,7 @@
 /***/ function(module, exports) {
 
 	'use strict';
-	
+
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
@@ -380,4 +380,3 @@
 
 /***/ }
 /******/ ]);
-//# sourceMappingURL=main.bundle.js.map
