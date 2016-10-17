@@ -4,8 +4,11 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
 
 var routes = require('./routes/routes');
+var initDB = require('./initDB/initDB');
 
 var app = express();
 
@@ -21,22 +24,32 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+var db = mongoose.connection;
+var dbURI = 'mongodb://localhost/omdb';
+
+mongoose.connect(dbURI, {
+  server: {
+    reconnectTries: Number.MAX_VALUE
+  }
 });
 
-// error handlers
+db.on('disconnected', function() {
+  console.log('MongoDB disconnected');
+});
 
-// development error handler
-// will print stacktrace
-if (app.get('env') === 'development') {
-  app.use(function(err, req, res) {
-    res.status(err.status || 500);
+db.on('connected', function() {
+  console.log('MongoDB connected');
+});
+
+db.on('reconnected', function() {
+  console.log('MongoDB reconnected');
+});
+
+db.on('error', function() {
+  app.use(function(req, res) {
+    console.log('MongoDB error');
+    var err = new Error('Database connection failed');
     res.render('error', {
       appTitle: 'OMDb Hero',
       pageTitle: 'OMDb Hero | Error',
@@ -44,19 +57,46 @@ if (app.get('env') === 'development') {
       error: err
     });
   });
-}
-
-// production error handler
-// no stacktraces leaked to user
-app.use(function(err, req, res) {
-  res.status(err.status || 500);
-  res.render('error', {
-    appTitle: 'OMDb Hero',
-    pageTitle: 'OMDb Hero | Error',
-    message: err.message,
-    error: {}
-  });
 });
 
+db.once('open', function() {
+  console.log('MongoDB opened');
+  initDB();
+  app.use('/', routes);
+  // catch 404 and forward to error handler
+  app.use(function(req, res, next) {
+    var err = new Error('Not Found');
+    err.status = 404;
+    next(err);
+  });
+
+  // error handlers
+
+  // development error handler
+  // will print stacktrace
+  if (app.get('env') === 'development') {
+    app.use(function(err, req, res) {
+      res.status(err.status || 500);
+      res.render('error', {
+        appTitle: 'OMDb Hero',
+        pageTitle: 'OMDb Hero | Error',
+        message: err.message,
+        error: err
+      });
+    });
+  }
+
+  // production error handler
+  // no stacktraces leaked to user
+  app.use(function(err, req, res) {
+    res.status(err.status || 500);
+    res.render('error', {
+      appTitle: 'OMDb Hero',
+      pageTitle: 'OMDb Hero | Error',
+      message: err.message,
+      error: {}
+    });
+  });
+});
 
 module.exports = app;
