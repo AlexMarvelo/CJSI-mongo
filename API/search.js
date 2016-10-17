@@ -7,6 +7,8 @@ function getSearchRequestData(qObj) {
   var dbQuery = {
     Title: new RegExp(`.*${qObj.s}.*`, 'i')
   };
+  if (qObj.y) dbQuery.Year = qObj.y;
+  if (qObj.type) dbQuery.Type = qObj.type;
   return Movie.find(dbQuery).exec()
     .then(movies => {
       if (!movies.length) {
