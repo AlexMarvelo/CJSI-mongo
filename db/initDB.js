@@ -1,5 +1,5 @@
-var Movie = require('../models/movie');
-var data = require('./initData.json');
+const Movie = require('../models/movie');
+const data = require('./initData.json');
 
 // function clearDB() {
 //   Movie.remove({}, error => {
@@ -9,7 +9,7 @@ var data = require('./initData.json');
 
 function insertBaseData() {
   data.input.forEach(movieData => {
-    var movie = new Movie(movieData);
+    let movie = new Movie(movieData);
     movie.save()
       // .then(console.log)
       .catch(console.error);

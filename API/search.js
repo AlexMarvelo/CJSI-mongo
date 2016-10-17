@@ -1,20 +1,22 @@
-var fetch = require('node-fetch');
-var Movie = require('../models/movie');
+const db = require('../db/db');
+const Movie = require('../models/movie');
+const getRequestedDataFromOMDb = require('./getRequestedDataFromOMDb');
 
-var OMDbURL = 'http://www.omdbapi.com';
 const itemsPerPage = 10;
 
 function getSearchRequestData(qObj) {
-  var dbQuery = {
+  if (!db.readyState) return getRequestedDataFromOMDb(`/${getQString(qObj)}`);
+
+  let dbQuery = {
     Title: new RegExp(`.*${qObj.s}.*`, 'i')
   };
   if (qObj.y) dbQuery.Year = qObj.y;
   if (qObj.type) dbQuery.Type = qObj.type;
-  var page = qObj.page || 1;
+  let page = qObj.page || 1;
   return Movie.find(dbQuery).exec()
     .then(movies => {
       if (!movies.length) {
-        return getRequestedDataFromOMDb(qObj);
+        return getRequestedDataFromOMDb(`/${getQString(qObj)}`);
       }
       return {
         Search: movies.slice((page-1)*itemsPerPage, page*itemsPerPage),
@@ -22,12 +24,6 @@ function getSearchRequestData(qObj) {
         Response: 'True'
       };
     });
-}
-
-function getRequestedDataFromOMDb(qObj) {
-  return fetch(`${OMDbURL}/${getQString(qObj)}`)
-    .then(res => res.text())
-    .then(JSON.parse);
 }
 
 function getQString(qObj) {

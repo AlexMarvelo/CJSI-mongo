@@ -1,13 +1,14 @@
-var express = require('express');
-var router = express.Router();
-var getSearchRequestData = require('../API/search');
-var getMovieByID = require('../API/getMovieByID');
+const express = require('express');
+const router = express.Router();
+const db = require('../db/db');
+const getSearchRequestData = require('../API/search');
+const getMovieByID = require('../API/getMovieByID');
 
-var props = {
-  appTitle: 'OMDb Hero',
+let props = {
+  pageTitle: 'OMDb Hero'
 };
 
-router.get('/', function(req, res) {
+router.get('/', (req, res) => {
   if (req.query && req.query.s) {
     console.log('- get search');
     getSearchRequestData(req.query)
@@ -33,6 +34,10 @@ router.get('/', function(req, res) {
   }
 
   renderApp(res);
+});
+
+router.get('/isdbconnected', (req, res) => {
+  res.send({dbconnected: db.readyState});
 });
 
 router.get('/movie/:movieID', function(req, res) {

@@ -4,7 +4,12 @@ Hometask for Ciklum JS Internship Lesson 11
 ---
 
 ##### List of used technologies:
-
+- express
+- mongodb (with mongoose)
+- ES6 (with Babel)
+- Angular
+- webpack
+- jade
 
 ---
 
@@ -13,6 +18,7 @@ Hometask for Ciklum JS Internship Lesson 11
 git clone https://github.com/AlexMarvelo/CJSI-mongo.git
 cd CJSI-mongo
 npm i
+mongod
 npm start
 ```
-Then open *http://localhost:8080/* file in your browser
+Then open *http://localhost:3000/* file in your browser
