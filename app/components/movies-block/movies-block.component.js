@@ -7,7 +7,7 @@ angular.
 
         this.moviesOnPage = [];
         this.currentView = {
-          totalResults: 1,
+          totalResults: 0,
           currentPage: 1
         };
 
@@ -20,6 +20,7 @@ angular.
                 return this.favourites.indexOfByProp(movie, 'imdbID') === -1;
               })
             );
+            // TODO call notification about false response
           }
           this.setPagination();
           // $log.log('Favourites:', this.favourites);

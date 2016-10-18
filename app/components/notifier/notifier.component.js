@@ -6,25 +6,48 @@ angular.
     controller: ['IsDBconnected',
       function NotifierCtrl(IsDBconnected) {
         // types: success, info, warning, danger
+        // codes: 1 - db connection failed
+        //        2 - empty search result response
+        const dbConnectionCode = 1;
+        const emptyResult = 2;
         this.alerts = [];
-        this.addAlert = (alert) => {
-          this.alerts.push(alert);
+        this.addAlert = (code, alert) => {
+          if (alert) {
+            this.alerts.push(alert);
+            return;
+          }
+          switch (code) {
+          case dbConnectionCode:
+            this.alerts.push({
+              msg: 'Connection to local database failed. Remote one will be used',
+              type: 'warning',
+              code: dbConnectionCode
+            });
+            break;
+          case emptyResult:
+            this.alerts.push({
+              msg: 'Movies not found, sorry',
+              type: 'danger',
+              code: emptyResult
+            });
+            break;
+          }
         };
-        this.removeAlert = (index) => {
-          this.alerts.splice(index, 1);
+        this.removeAlert = (code, index) => {
+          if (index !== undefined) {
+            this.alerts.splice(index, 1);
+            return;
+          }
+          this.alerts.filter(a => a.code === dbConnectionCode)
+            .forEach((a, i) => this.removeAlert(dbConnectionCode, i));
         };
 
         this.checkDBconnection = () => {
           IsDBconnected.get(res => {
             if (!res.dbconnected) {
-              this.addAlert({
-                msg: 'Connection to local database failed. Remote one will be used',
-                type: 'warning',
-                code: 1
-              });
+              this.addAlert(1);
             } else {
-              let index = this.alerts.indexOf(this.alerts.find(a => a.code === 1));
-              if (index !== undefined) this.removeAlert(index);
+              this.removeAlert(1);
             }
           });
         };

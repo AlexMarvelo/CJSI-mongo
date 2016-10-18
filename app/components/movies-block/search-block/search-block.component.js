@@ -7,7 +7,7 @@ angular.
       function SearchBlockCtrl($scope, $log, CONFIG, Movies) {
         this.blockTitle = `Welcome to ${CONFIG.appName}`;
 
-        this.onSearchSubmit = function(event, targetPage = 1) {
+        this.onSearchSubmit = (event, targetPage = 1) => {
           event.preventDefault();
           this.currentview = Movies.get({
             s: this.qstring,
@@ -19,15 +19,13 @@ angular.
               this.currentview.currentPage = targetPage;
             } else {
               targetPage = 1;
-              this.currentview = {
-                Search: [],
-                totalResults: 1,
-                currentPage: 1
-              };
+              this.currentview.Search = [];
+              this.currentviewtotalResults = 0;
+              this.currentview.currentPage = 1;
             }
             $scope.$parent.$ctrl.updateMoviesList();
           });
-        }.bind(this);
+        };
       }
     ],
 

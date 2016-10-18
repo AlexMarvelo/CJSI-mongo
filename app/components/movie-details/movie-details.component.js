@@ -7,7 +7,7 @@ angular.
       function MovieDetailsCtrl($scope, $log, $routeParams, localStorageService, Movies) {
         // $log.log('Movie-details fav', this.favourites);
 
-        this.movie = Movies.get({i: $routeParams.movieID}, (movie) => {
+        this.movie = Movies.get({i: $routeParams.movieID}, () => {
           // $log.log(this.movie);
           this.movie.isFavourite = this.favourites.indexOfByProp({imdbID: $routeParams.movieID}, 'imdbID') !== -1;
           this.tableDetails = {};
