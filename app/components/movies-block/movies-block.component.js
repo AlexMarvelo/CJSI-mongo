@@ -19,6 +19,7 @@ angular.
                 return this.favourites.indexOfByProp(movie, 'imdbID') === -1;
               })
             );
+            if (this.currentView.remoteSourse) this.notifyevents = [{code: 3}];
           } else {
             this.moviesOnPage = this.favourites;
             this.notifyevents = [{code: 2}];

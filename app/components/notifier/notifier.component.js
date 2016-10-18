@@ -10,6 +10,7 @@ angular.
         //        2 - empty search result response
         const dbConnectionCode = 1;
         const emptyResult = 2;
+        const remoteSourse = 3;
 
         this.$onInit = () => {
           this.alerts = [];
@@ -40,9 +41,16 @@ angular.
             break;
           case emptyResult:
             this.alerts.push({
-              msg: 'Movies not found, sorry',
+              msg: 'No movies were found, sorry',
               type: 'danger',
               code: emptyResult
+            });
+            break;
+          case remoteSourse:
+            this.alerts.push({
+              msg: 'No results from local database, remote one was used',
+              type: 'info',
+              code: remoteSourse
             });
             break;
           }
