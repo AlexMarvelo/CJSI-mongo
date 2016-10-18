@@ -16,6 +16,7 @@ require('./utils/indexOfByProp');
 // Import modules
 require('./core/core.module');
 require('./components/navbar/navbar.module');
+require('./components/notifier/notifier.module');
 require('./components/entry-form/entry-form.module');
 require('./components/movies-block/movies-block.module');
 require('./components/movie-details/movie-details.module');
@@ -26,6 +27,7 @@ angular.module('OMDbHero', [
   require('angular-local-storage'),
   'core',
   'navbar',
+  'notifier',
   'entryForm',
   'moviesBlock',
   'movieDetails'
