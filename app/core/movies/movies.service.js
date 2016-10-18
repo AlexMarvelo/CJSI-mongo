@@ -14,6 +14,7 @@ angular.
       });
     }
   ]).
+  
   factory('Movie', ['$resource',
     ($resource) => {
       return $resource('http://localhost:3000/movie/', {}, {

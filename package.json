@@ -7,8 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --progress --colors",
     "build-watch": "webpack --progress --colors --watch",
+    "start-server-watch": "nodemon ./bin/www",
     "start-server": "node ./bin/www",
-    "start": "npm run build && node ./bin/www"
+    "start": "npm run build && npm run start-server"
   },
   "author": "Alexey <mironenkoalexey@gmail.com>",
   "repository": {
@@ -24,16 +25,22 @@
     "angular-resource": "^1.5.8",
     "angular-route": "^1.5.8",
     "angular-ui-router": "^0.3.1",
+    "bcrypt-nodejs": "0.0.3",
     "body-parser": "~1.15.1",
     "bootstrap": "^3.3.7",
+    "connect-flash": "^0.1.1",
     "cookie-parser": "~1.4.3",
     "debug": "~2.2.0",
     "express": "^4.14.0",
+    "express-session": "^1.14.1",
     "jade": "~1.11.0",
     "jquery": "^3.1.1",
+    "method-override": "^2.3.6",
     "mongoose": "^4.6.4",
     "morgan": "~1.7.0",
     "node-fetch": "^1.6.3",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0",
     "serve-favicon": "~2.3.0"
   },
   "devDependencies": {
