@@ -16,6 +16,12 @@ angular
           when('/movie/:movieID', {
             template: '<movie-details favourites="MainCtrl.favourites"></movie-details>'
           }).
+          when('/login', {
+            template: '<entry-login></entry-lofin>'
+          }).
+          when('/signup', {
+            template: '<entry-register></entry-register>'
+          }).
           otherwise('/');
 
         localStorageServiceProvider

@@ -5,9 +5,17 @@ angular.
   component('navbar', {
     controller: ['$scope', 'CONFIG',
       function NavbarCtrl($scope, CONFIG) {
-        this.homeButton = {
+        this.homeBtn = {
           link: '/',
           title: CONFIG.appName,
+        };
+        this.loginBtn = {
+          link: '/login',
+          title: 'Login',
+        };
+        this.signupBtn = {
+          link: '/signup',
+          title: 'Sign up',
         };
       }
     ],
@@ -22,10 +30,13 @@ angular.
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="{{$ctrl.homeButton.link}}">{{$ctrl.homeButton.title}}</a>
+                <a class="navbar-brand" href="{{$ctrl.homeBtn.link}}">{{$ctrl.homeBtn.title}}</a>
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav"></ul>
+                <ul class="nav navbar-nav">
+                  <li><a href="{{$ctrl.loginBtn.link}}">{{$ctrl.loginBtn.title}}</a></li>
+                  <li><a href="{{$ctrl.signupBtn.link}}">{{$ctrl.signupBtn.title}}</a></li>
+                </ul>
             </div>
         </div>
     </nav>

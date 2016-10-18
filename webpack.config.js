@@ -1,13 +1,16 @@
 var PRODUCTION = false;
 
 var webpack = require('webpack');
-// var path = require('path');
+var path = require('path');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 var webpackConfig = {
-  entry: __dirname + '/app/app.module.js',
+  entry: {
+    app: [__dirname + '/app/app.module.js']
+  },
   output: {
-    path: __dirname + '/public/',
+    path: __dirname + '/public',
+    // publicPath: '/public',
     filename: PRODUCTION ? '[name].bundle.min.js' : '[name].bundle.js'
   },
 

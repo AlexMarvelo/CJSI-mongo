@@ -3,8 +3,11 @@
 require('../node_modules/angular/angular.min');
 
 // Import styles
-require('./theme/css/bootstrap.min.css');
+require('../node_modules/bootstrap/dist/css/bootstrap.css');
 require('./theme/css/heroic-features.css');
+
+window.jQuery = require('jquery');
+require('../node_modules/bootstrap/dist/js/bootstrap.js');
 
 // Import utils
 require('./utils/findAncestor');
@@ -13,6 +16,7 @@ require('./utils/indexOfByProp');
 // Import modules
 require('./core/core.module');
 require('./components/navbar/navbar.module');
+require('./components/entry-form/entry-form.module');
 require('./components/movies-block/movies-block.module');
 require('./components/movie-details/movie-details.module');
 
@@ -22,6 +26,7 @@ angular.module('OMDbHero', [
   require('angular-local-storage'),
   'core',
   'navbar',
+  'entryForm',
   'moviesBlock',
   'movieDetails'
 ]);
