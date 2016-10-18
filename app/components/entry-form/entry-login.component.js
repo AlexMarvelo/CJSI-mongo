@@ -3,11 +3,12 @@
 angular.
   module('entryForm').
   component('entryLogin', {
-    controller: ['$scope', '$log',
-      function EntryLoginCtrl($scope, $log) {
+    controller: [
+      function EntryLoginCtrl() {
         this.staticText = {
           formHeader: 'Login',
-          btnText: 'Login'
+          btnText: 'Login',
+          redirectLinkText: 'Don\'t have an account? Sign up'
         };
       }
     ],
@@ -24,6 +25,7 @@ angular.
             </div>
             <button type="submit" class="btn btn-default" tabindex="3">{{$ctrl.staticText.btnText}}</button>
           </form>
+          <a href="/signup" tabindex="4">{{$ctrl.staticText.redirectLinkText}}</a>
         </div>
       </div>
     </div>

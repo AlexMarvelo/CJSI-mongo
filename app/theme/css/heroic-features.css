@@ -75,7 +75,8 @@ h1 {
   margin: 0 auto;
 }
 
-.entry-form .input-group input {
+.entry-form .input-group input,
+.entry-form .btn {
   margin-bottom: 10px;
 }
 
