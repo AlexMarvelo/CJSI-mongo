@@ -11,16 +11,16 @@ angular
         $locationProvider.html5Mode(true);
         $routeProvider.
           when('/', {
-            template: '<movies-block favourites="MainCtrl.favourites"></movies-block>'
+            template: '<movies-block favourites="MainCtrl.favourites" notifyevents="MainCtrl.notifyEvents"></movies-block>'
           }).
           when('/movie/:movieID', {
-            template: '<movie-details favourites="MainCtrl.favourites"></movie-details>'
+            template: '<movie-details favourites="MainCtrl.favourites" notifyevents="MainCtrl.notifyEvents"></movie-details>'
           }).
           when('/login', {
-            template: '<entry-login></entry-lofin>'
+            template: '<entry-login notifyevents="MainCtrl.notifyEvents"></entry-lofin>'
           }).
           when('/signup', {
-            template: '<entry-register></entry-register>'
+            template: '<entry-register notifyevents="MainCtrl.notifyEvents"></entry-register>'
           }).
           otherwise('/');
 
@@ -30,9 +30,9 @@ angular
 
     .controller('OMDbHero.Controller', [
       '$scope', '$log', 'localStorageService', function($scope, $log, localStorageService) {
-        let vm = this;
-        vm.favourites = localStorageService.get('favourites');
-        if (!vm.favourites) vm.favourites = [];
+        this.notifyEvents = [];
+        this.favourites = localStorageService.get('favourites');
+        if (!this.favourites) this.favourites = [];
         // $log.log('Main fav', this.favourites);
       }])
 

@@ -3,30 +3,30 @@ angular.
   component('moviesBlock', {
     controller: ['$scope', '$log', 'localStorageService', 'CONFIG',
       function MoviesBlockCtrl($scope, $log, localStorageService, CONFIG) {
-        // $log.log('Movies-block fav: ', this.favourites);
-
-        this.moviesOnPage = [];
-        this.currentView = {
-          totalResults: 0,
-          currentPage: 1
+        this.$onInit = () => {
+          this.moviesOnPage = [];
+          this.currentView = {
+            totalResults: 0,
+            currentPage: 1
+          };
+          this.setPagination();
         };
 
-        this.updateMoviesList = function() {
-          if (!this.currentView.Search) {
-            this.moviesOnPage = this.favourites;
-          } else {
+        this.updateMoviesList = () => {
+          if (this.currentView.Response == 'True') {
             this.moviesOnPage = this.favourites.concat(
               this.currentView.Search.filter((movie) => {
                 return this.favourites.indexOfByProp(movie, 'imdbID') === -1;
               })
             );
-            // TODO call notification about false response
+          } else {
+            this.moviesOnPage = this.favourites;
+            this.notifyevents = [{code: 2}];
           }
           this.setPagination();
-          // $log.log('Favourites:', this.favourites);
         };
 
-        this.setPagination = function() {
+        this.setPagination = () => {
           this.pagination = [];
           let totalPages = Math.ceil(this.currentView.totalResults / CONFIG.moviesPerPage);
           let currentPage = this.currentView.currentPage;
@@ -43,16 +43,15 @@ angular.
             });
           }
         };
-        this.setPagination();
 
-        this.onPaginationClick = function(event) {
+        this.onPaginationClick = (event) => {
           event.preventDefault();
           let targetPage = parseInt(event.target.dataset.id);
           if (!targetPage) return;
           $scope.$$childHead.$ctrl.onSearchSubmit(new Event('submit'), targetPage);
         };
 
-        this.onFavouritesAddClick = function(event) {
+        this.onFavouritesAddClick = (event) => {
           if (!event.target.classList.contains('btn-favourite') &&
               !event.target.classList.contains('btn-favourite-text') &&
               !event.target.classList.contains('glyphicon-star')) return;
@@ -80,7 +79,8 @@ angular.
     ],
 
     bindings: {
-      favourites: '='
+      favourites: '=',
+      notifyevents: '='
     },
 
     template: `
