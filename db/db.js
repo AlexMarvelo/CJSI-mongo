@@ -1,17 +1,15 @@
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
-const initDB = require('./initDB');
-
 const db = mongoose.connection;
-const dbURI = 'mongodb://localhost/omdb';
-const reconnectInterval = 2000;
+const initDB = require('./initDB');
+const dbConfig = require('./config.json');
 
-mongoose.connect(dbURI);
+mongoose.connect(dbConfig.url);
 
 db.on('disconnected', function() {
   console.log('MongoDB disconnected');
-  setTimeout(() => {mongoose.connect(dbURI);}, reconnectInterval);
+  setTimeout(() => { mongoose.connect(dbConfig.url); }, dbConfig.reconnectInterval);
 });
 
 db.on('connected', function() {

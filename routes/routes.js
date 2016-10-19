@@ -1,9 +1,4 @@
 const express = require('express');
-
-const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
-const User = require('../models/user');
-
 const router = express.Router();
 const db = require('../db/db');
 const getSearchRequestData = require('../API/search');
@@ -13,98 +8,90 @@ let props = {
   pageTitle: 'OMDb Hero'
 };
 
-router.get('/', isLoggedIn, (req, res) => {
-  if (req.query && req.query.s) {
-    console.log('- get search');
-    getSearchRequestData(req.query)
-      .then(JSON.stringify)
-      .then(data => res.send(data))
-      .catch(error => {
-        res.send(error);
-        console.error(error);
-      });
-    return;
-  }
+module.exports = function(app, passport) {
+  router.get('/', isLoggedIn, (req, res, next) => {
+    if (req.query && req.query.s) {
+      console.log('- get search');
+      getSearchRequestData(req.query)
+        .then(JSON.stringify)
+        .then(data => res.send(data))
+        .catch(error => {
+          res.send(error);
+          console.error(error);
+        });
+      next();
+    }
 
-  if (req.query && req.query.i) {
-    console.log('- get single');
-    getMovieByID(req.query.i)
-      .then(JSON.stringify)
-      .then(data => res.send(data))
-      .catch(error => {
-        res.send(error);
-        console.error(error);
-      });
-    return;
-  }
+    if (req.query && req.query.i) {
+      console.log('- get single');
+      getMovieByID(req.query.i)
+        .then(JSON.stringify)
+        .then(data => res.send(data))
+        .catch(error => {
+          res.send(error);
+          console.error(error);
+        });
+      next();
+    }
 
-  renderApp(res);
-});
+    renderApp(res);
+  });
 
-router.get('/login', (req, res) => {
-  renderApp(res);
-});
+  router.get('/login', isLoggedOut, (req, res) => {
+    renderApp(res);
+  });
 
-router.get('/signup', (req, res) => {
-  renderApp(res);
-});
-
-
-// utils
-router.get('/isdbconnected', (req, res) => {
-  res.send({dbconnected: db.readyState});
-});
-
-router.get('/movie/:movieID', function(req, res) {
-  renderApp(res);
-});
-
-router.get('/islogined', function(req, res) {
-  res.send({ isLogined: req.isAuthenticated()});
-});
+  router.get('/signup', isLoggedOut, (req, res) => {
+    renderApp(res);
+  });
 
 
-// auth:
-// passport.use(new LocalStrategy(
-//   function(username, password, done) {
-//     User.findOne({ username: username }, function (err, user) {
-//       if (err) { return done(err); }
-//       if (!user) {
-//         return done(null, false, { message: 'Incorrect username.' });
-//       }
-//       if (!user.validPassword(password)) {
-//         return done(null, false, { message: 'Incorrect password.' });
-//       }
-//       return done(null, user);
-//     });
-//   }
-// ));
+  // utils
+  router.get('/isdbconnected', (req, res) => {
+    res.send({dbconnected: db.readyState});
+  });
 
-// router.post('/login',
-//   passport.authenticate('local', {
-//     successRedirect: '/',
-//     failureRedirect: '/login',
-//     // successFlash: true,
-//     failureFlash: true
-//   }),
-//   (req, res) => { // eslint-disable-line no-unused-vars
-//     req.flash();
-//     // If this function gets called, authentication was successful.
-//     // `req.user` contains the authenticated user.
-//     console.log(req.user);
-//   }
-// );
+  router.get('/movie/:movieID', function(req, res) {
+    renderApp(res);
+  });
+
+  router.get('/islogined', function(req, res) {
+    res.send({ isLogined: req.isAuthenticated()});
+  });
+
+  router.post('/login', passport.authenticate('local-login', {
+    successRedirect : '/',
+    failureRedirect : '/login',
+    failureFlash : true
+  }));
+
+  router.post('/signup', passport.authenticate('local-signup', {
+    successRedirect : '/',
+    failureRedirect : '/signup',
+    failureFlash : true
+  }));
+
+  router.post('/logout', function(req, res){
+    req.logout();
+    res.redirect('/login');
+  });
+
+  app.use(router);
+};
+
 
 function isLoggedIn(req, res, next) {
-  // if user is authenticated in the session, carry on
-  if (req.isAuthenticated())
-    return next();
-  // if they aren't redirect them to the home page
+  console.log(`- private route requested. isAuthenticated = ${req.isAuthenticated()}`);
+  if (req.isAuthenticated()) return next();
   res.redirect('/login');
+}
+
+function isLoggedOut(req, res, next) {
+  console.log(`- login/signup route requested. isAuthenticated = ${req.isAuthenticated()}`);
+  if (!req.isAuthenticated()) return next();
+  res.redirect('/');
 }
 
 function renderApp(res) {
   res.render('index', props);
 }
-
-module.exports = router;

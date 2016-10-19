@@ -17,6 +17,10 @@ angular.
           link: '/signup',
           title: 'Sign up',
         };
+        this.logoutBtn = {
+          link: '/logout',
+          title: 'Logout',
+        };
       }
     ],
 
@@ -33,9 +37,10 @@ angular.
                 <a class="navbar-brand" href="{{$ctrl.homeBtn.link}}">{{$ctrl.homeBtn.title}}</a>
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav">
+                <ul class="nav navbar-nav navbar-right">
                   <li><a href="{{$ctrl.loginBtn.link}}">{{$ctrl.loginBtn.title}}</a></li>
                   <li><a href="{{$ctrl.signupBtn.link}}">{{$ctrl.signupBtn.title}}</a></li>
+                  <li><a href="{{$ctrl.logoutBtn.link}}">{{$ctrl.logoutBtn.title}}</a></li>
                 </ul>
             </div>
         </div>

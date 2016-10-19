@@ -35,7 +35,7 @@ angular
         function($scope, $rootScope, $log, localStorageService) {
           this.notifyEvents = [];
           $rootScope.user = {
-            logined: false
+            logined: true
           };
           this.favourites = localStorageService.get('favourites');
           if (!this.favourites) this.favourites = [];
