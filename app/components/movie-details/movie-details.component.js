@@ -3,10 +3,10 @@
 angular.
   module('movieDetails').
   component('movieDetails', {
-    controller: ['$scope', '$log', '$routeParams', 'localStorageService', 'Movies', 'CONFIG',
-      function MovieDetailsCtrl($scope, $log, $routeParams, localStorageService, Movies) {
+    controller: ['$scope', '$log', '$routeParams', 'localStorageService', 'Movie', 'CONFIG',
+      function MovieDetailsCtrl($scope, $log, $routeParams, localStorageService, Movie) {
 
-        this.movie = Movies.get({i: $routeParams.movieID}, () => {
+        this.movie = Movie.get({movieID: $routeParams.movieID}, () => {
           this.movie.isFavourite = this.favourites.indexOfByProp({imdbID: $routeParams.movieID}, 'imdbID') !== -1;
           this.tableDetails = {};
           let skippingKeys = ['Title', 'Rated', 'Director', 'Plot', 'Poster', 'Response', 'imdbID'];

@@ -9,19 +9,44 @@ let props = {
 };
 
 module.exports = function(app, passport) {
+
+  // pages:
   router.get('/', isLoggedIn, (req, res) => {
-    if (req.query && req.query.s) {
-      getSearchRequestData(req.query)
+    renderApp(res);
+  });
+  router.get('/movie/:movieID', isLoggedIn, (req, res) => {
+    renderApp(res);
+  });
+  router.get('/login', isLoggedOut, (req, res) => {
+    renderApp(res);
+  });
+  router.get('/signup', isLoggedOut, (req, res) => {
+    renderApp(res);
+  });
+
+  // servises:
+  router.get('/search', isLoggedIn, (req, res) => {
+    getSearchRequestData(req.query)
+      .then(JSON.stringify)
+      .then(data => res.send(data))
+      .catch(error => {
+        res.send(error);
+        console.error(error);
+      });
+  });
+
+  router.all('/movie/:movieID/:action', isLoggedIn, function(req, res) {
+    switch (req.params.action) {
+    case 'get':
+      getMovieByID(req.params.movieID)
         .then(JSON.stringify)
         .then(data => res.send(data))
         .catch(error => {
           res.send(error);
           console.error(error);
         });
-      return;
-    }
-
-    if (req.query && req.query.i) {
+      break;
+    default:
       getMovieByID(req.query.i)
         .then(JSON.stringify)
         .then(data => res.send(data))
@@ -29,26 +54,9 @@ module.exports = function(app, passport) {
           res.send(error);
           console.error(error);
         });
-      return;
     }
-
-    renderApp(res);
   });
 
-  router.get('/movie/:movieID', function(req, res) {
-    renderApp(res);
-  });
-
-  router.get('/login', isLoggedOut, (req, res) => {
-    renderApp(res);
-  });
-
-  router.get('/signup', isLoggedOut, (req, res) => {
-    renderApp(res);
-  });
-
-
-  // utils
   router.all('/status/:action', (req, res) => {
     switch (req.params.action) {
     case 'dbconnection':
@@ -86,6 +94,13 @@ module.exports = function(app, passport) {
   }));
 
   app.use(router);
+
+  // catch 404 and forward to error handler
+  app.use((req, res, next) => {
+    let err = new Error('Not Found');
+    err.status = 404;
+    next(err);
+  });
 };
 
 

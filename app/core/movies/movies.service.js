@@ -4,17 +4,7 @@ angular.
   module('core.movies').
   factory('Movies', ['$resource', 'CONFIG',
     ($resource, CONFIG) => {
-      return $resource(CONFIG.appDomain, {}, {
-        query: {
-          method: 'GET'
-        }
-      });
-    }
-  ]).
-
-  factory('Movie', ['$resource', 'CONFIG',
-    ($resource, CONFIG) => {
-      return $resource(`${CONFIG.appDomain}/movie/`, {}, {
+      return $resource(`${CONFIG.appDomain}/search/`, {}, {
         query: {
           method: 'GET'
         }
