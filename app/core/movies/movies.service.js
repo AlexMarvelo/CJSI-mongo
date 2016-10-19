@@ -2,27 +2,21 @@
 
 angular.
   module('core.movies').
-  factory('Movies', ['$resource',
-    ($resource) => {
-      return $resource('http://localhost:3000', {}, {
+  factory('Movies', ['$resource', 'CONFIG',
+    ($resource, CONFIG) => {
+      return $resource(CONFIG.appDomain, {}, {
         query: {
-          method: 'GET',
-          params: {
-            s: ''
-          }
+          method: 'GET'
         }
       });
     }
   ]).
-  
-  factory('Movie', ['$resource',
-    ($resource) => {
-      return $resource('http://localhost:3000/movie/', {}, {
+
+  factory('Movie', ['$resource', 'CONFIG',
+    ($resource, CONFIG) => {
+      return $resource(`${CONFIG.appDomain}/movie/`, {}, {
         query: {
-          method: 'GET',
-          params: {
-            i: ''
-          }
+          method: 'GET'
         }
       });
     }

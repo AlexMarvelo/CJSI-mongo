@@ -2,14 +2,15 @@
 
 angular.
   module('core.status').
-  factory('IsDBconnected', ['$resource',
-    ($resource) => {
-      return $resource('http://localhost:3000/isdbconnected', {}, {});
-    }
-  ]).
-
-  factory('IsLogined', ['$resource',
-    ($resource) => {
-      return $resource('http://localhost:3000/islogined', {}, {});
+  factory('Status', ['$resource', 'CONFIG',
+    ($resource, CONFIG) => {
+      return $resource(`${CONFIG.appDomain}/status/:action`, {action: 'dbconnection'}, {
+        dbconnection: {
+          method: 'GET',
+          params: {
+            action: 'dbconnection'
+          }
+        }
+      });
     }
   ]);

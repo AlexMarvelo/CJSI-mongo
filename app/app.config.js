@@ -53,6 +53,7 @@ angular
 
     .constant('CONFIG', {
       'moviesPerPage': 10,
+      'appDomain': 'http://localhost:3000',
       'omdbAPI': '6f0a67d0',
       'appName': 'OMDb Hero',
       'debug': true

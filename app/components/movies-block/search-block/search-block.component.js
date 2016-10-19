@@ -9,7 +9,7 @@ angular.
 
         this.onSearchSubmit = (event, targetPage = 1) => {
           event.preventDefault();
-          this.currentview = Movies.get({
+          this.currentview = Movies.query({
             s: this.qstring,
             y: this.qyear,
             type: this.qtype,

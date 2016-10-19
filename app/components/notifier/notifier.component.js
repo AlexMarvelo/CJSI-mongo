@@ -3,8 +3,8 @@
 angular.
   module('notifier').
   component('notifier', {
-    controller: ['$scope', 'IsDBconnected',
-      function NotifierCtrl($scope, IsDBconnected) {
+    controller: ['$scope', 'Status',
+      function NotifierCtrl($scope, Status) {
         // types: success, info, warning, danger
         // codes: 1 - db connection failed
         //        2 - empty search result response
@@ -66,7 +66,7 @@ angular.
         };
 
         this.checkDBconnection = () => {
-          IsDBconnected.get(res => {
+          Status.dbconnection(res => {
             if (!res.dbconnected) {
               this.addAlert(1);
             } else {

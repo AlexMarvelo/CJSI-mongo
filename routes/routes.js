@@ -9,9 +9,8 @@ let props = {
 };
 
 module.exports = function(app, passport) {
-  router.get('/', isLoggedIn, (req, res, next) => {
+  router.get('/', isLoggedIn, (req, res) => {
     if (req.query && req.query.s) {
-      console.log('- get search');
       getSearchRequestData(req.query)
         .then(JSON.stringify)
         .then(data => res.send(data))
@@ -19,11 +18,10 @@ module.exports = function(app, passport) {
           res.send(error);
           console.error(error);
         });
-      next();
+      return;
     }
 
     if (req.query && req.query.i) {
-      console.log('- get single');
       getMovieByID(req.query.i)
         .then(JSON.stringify)
         .then(data => res.send(data))
@@ -31,9 +29,13 @@ module.exports = function(app, passport) {
           res.send(error);
           console.error(error);
         });
-      next();
+      return;
     }
 
+    renderApp(res);
+  });
+
+  router.get('/movie/:movieID', function(req, res) {
     renderApp(res);
   });
 
@@ -47,16 +49,28 @@ module.exports = function(app, passport) {
 
 
   // utils
-  router.get('/isdbconnected', (req, res) => {
-    res.send({dbconnected: db.readyState});
+  router.all('/status/:action', (req, res) => {
+    switch (req.params.action) {
+    case 'dbconnection':
+      res.send({dbconnected: db.readyState});
+      break;
+    default:
+      res.send({dbconnected: db.readyState});
+    }
   });
 
-  router.get('/movie/:movieID', function(req, res) {
-    renderApp(res);
-  });
-
-  router.get('/islogined', function(req, res) {
-    res.send({ isLogined: req.isAuthenticated()});
+  router.all('/user/:action', function(req, res) {
+    switch (req.params.action) {
+    case 'get':
+      res.send(req.user);
+      break;
+    case 'logout':
+      req.logout();
+      res.redirect('/login');
+      break;
+    default:
+      res.send(req.user);
+    }
   });
 
   router.post('/login', passport.authenticate('local-login', {
@@ -70,11 +84,6 @@ module.exports = function(app, passport) {
     failureRedirect : '/signup',
     failureFlash : true
   }));
-
-  router.post('/logout', function(req, res){
-    req.logout();
-    res.redirect('/login');
-  });
 
   app.use(router);
 };

@@ -3,23 +3,39 @@
 angular.
   module('navbar').
   component('navbar', {
-    controller: ['$scope', 'CONFIG',
-      function NavbarCtrl($scope, CONFIG) {
-        this.homeBtn = {
-          link: '/',
-          title: CONFIG.appName,
+    controller: ['$scope', 'CONFIG', 'User',
+      function NavbarCtrl($scope, CONFIG, User) {
+        this.static = {
+          homeBtn: {
+            link: '/',
+            title: CONFIG.appName,
+          },
+          loginBtn: {
+            link: '/login',
+            title: 'Login',
+          },
+          signupBtn: {
+            link: '/signup',
+            title: 'Sign up',
+          },
+          logoutBtn: {
+            link: '/logout',
+            title: 'Logout',
+          }
         };
-        this.loginBtn = {
-          link: '/login',
-          title: 'Login',
+
+        this.getUser = (event) => {
+          event.preventDefault();
+          User.get((user) => {
+            console.log(user);
+          });
         };
-        this.signupBtn = {
-          link: '/signup',
-          title: 'Sign up',
-        };
-        this.logoutBtn = {
-          link: '/logout',
-          title: 'Logout',
+
+        this.logoutUser = (event) => {
+          event.preventDefault();
+          User.logout(() => {
+            console.log('logouted');
+          });
         };
       }
     ],
@@ -34,13 +50,14 @@ angular.
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="{{$ctrl.homeBtn.link}}">{{$ctrl.homeBtn.title}}</a>
+                <a class="navbar-brand" href="{{$ctrl.static.homeBtn.link}}">{{$ctrl.static.homeBtn.title}}</a>
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
-                  <li><a href="{{$ctrl.loginBtn.link}}">{{$ctrl.loginBtn.title}}</a></li>
-                  <li><a href="{{$ctrl.signupBtn.link}}">{{$ctrl.signupBtn.title}}</a></li>
-                  <li><a href="{{$ctrl.logoutBtn.link}}">{{$ctrl.logoutBtn.title}}</a></li>
+                  <li><a href="{{$ctrl.static.loginBtn.link}}">{{$ctrl.static.loginBtn.title}}</a></li>
+                  <li><a href="{{$ctrl.static.signupBtn.link}}">{{$ctrl.static.signupBtn.title}}</a></li>
+                  <li><a href="#" ng-click="$ctrl.getUser($event)">Get user</a></li>
+                  <li><a href="#" ng-click="$ctrl.logoutUser($event)">{{$ctrl.static.logoutBtn.title}}</a></li>
                 </ul>
             </div>
         </div>
