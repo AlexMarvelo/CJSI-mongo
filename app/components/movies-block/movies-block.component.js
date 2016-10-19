@@ -73,8 +73,6 @@ angular.
             }
           }
           localStorageService.set('favourites', this.favourites);
-          // $log.log('Favourites:', this.favourites);
-          // $log.log('Local storage:', localStorageService.get('favourites'));
         };
       }
     ],

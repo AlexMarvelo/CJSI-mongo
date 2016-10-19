@@ -5,10 +5,8 @@ angular.
   component('movieDetails', {
     controller: ['$scope', '$log', '$routeParams', 'localStorageService', 'Movies', 'CONFIG',
       function MovieDetailsCtrl($scope, $log, $routeParams, localStorageService, Movies) {
-        // $log.log('Movie-details fav', this.favourites);
 
         this.movie = Movies.get({i: $routeParams.movieID}, () => {
-          // $log.log(this.movie);
           this.movie.isFavourite = this.favourites.indexOfByProp({imdbID: $routeParams.movieID}, 'imdbID') !== -1;
           this.tableDetails = {};
           let skippingKeys = ['Title', 'Rated', 'Director', 'Plot', 'Poster', 'Response', 'imdbID'];
@@ -39,8 +37,6 @@ angular.
             this.favourites.push(this.movie);
           }
           localStorageService.set('favourites', this.favourites);
-          // $log.log('Favourites:', this.favourites);
-          // $log.log('Local storage:', localStorageService.get('favourites'));
         };
       }
     ],

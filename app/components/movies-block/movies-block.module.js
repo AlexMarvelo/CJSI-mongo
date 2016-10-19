@@ -1,6 +1,5 @@
 'use strict';
 
-// Define the `moviesBlock` module
 angular.module('moviesBlock', []);
 
 require('./movies-block.component');

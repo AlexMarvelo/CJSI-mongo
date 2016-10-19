@@ -41,10 +41,11 @@ angular
           if (!this.favourites) this.favourites = [];
         }])
 
-      .run( ['$rootScope', '$location',
-        function($rootScope, $location) {
+      .run( ['$rootScope', '$location', '$log', 'CONFIG',
+        function($rootScope, $location, $log, CONFIG) {
           $rootScope.$on( '$routeChangeStart', (event, next) => {
             if (!$rootScope.user.logined && next.private) {
+              if (CONFIG.debug) $log.log('Redirecting to /login');
               $location.path( '/login' );
             }
           });
@@ -53,5 +54,6 @@ angular
     .constant('CONFIG', {
       'moviesPerPage': 10,
       'omdbAPI': '6f0a67d0',
-      'appName': 'OMDb Hero'
+      'appName': 'OMDb Hero',
+      'debug': true
     });
