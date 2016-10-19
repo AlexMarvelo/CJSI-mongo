@@ -23,7 +23,7 @@ require('./components/movie-details/movie-details.module');
 
 // Declare app level module which depends on views, and components
 angular.module('OMDbHero', [
-  require('angular-route'),
+  require('angular-ui-router'),
   require('angular-local-storage'),
   'core',
   'navbar',

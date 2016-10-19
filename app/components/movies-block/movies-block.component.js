@@ -90,11 +90,11 @@ angular.
       <div class="row text-center">
         <div ng-repeat="movie in $ctrl.moviesOnPage" class="movie-card col-sm-6 col-md-4 col-lg-3">
           <div class="thumbnail {{movie.isFavourite ? 'thumbnail-favourite' : ''}}" data-id="{{movie.imdbID}}">
-            <a href="movie/{{movie.imdbID}}">
+            <a ui-sref="movieDetails({movieID: movie.imdbID})">
               <img ng-src="{{movie.Poster !== 'N/A' ? movie.Poster : 'http://placehold.it/280x390'}}" alt="{{movie.Title}}">
             </a>
             <div class="caption">
-              <a href="movie/{{movie.imdbID}}">
+              <a ui-sref="movieDetails({movieID: movie.imdbID})">
                 <h3>{{movie.Title}}</h3>
               </a>
               <span class="badge">{{movie.Year}}</span>

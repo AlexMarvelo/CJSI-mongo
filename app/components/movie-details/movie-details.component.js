@@ -3,11 +3,11 @@
 angular.
   module('movieDetails').
   component('movieDetails', {
-    controller: ['$scope', '$log', '$routeParams', 'localStorageService', 'Movie', 'CONFIG',
-      function MovieDetailsCtrl($scope, $log, $routeParams, localStorageService, Movie) {
+    controller: ['$scope', '$log', '$stateParams', 'localStorageService', 'Movie', 'CONFIG',
+      function MovieDetailsCtrl($scope, $log, $stateParams, localStorageService, Movie) {
 
-        this.movie = Movie.get({movieID: $routeParams.movieID}, () => {
-          this.movie.isFavourite = this.favourites.indexOfByProp({imdbID: $routeParams.movieID}, 'imdbID') !== -1;
+        this.movie = Movie.get({movieID: $stateParams.movieID}, () => {
+          this.movie.isFavourite = this.favourites.indexOfByProp({imdbID: $stateParams.movieID}, 'imdbID') !== -1;
           this.tableDetails = {};
           let skippingKeys = ['Title', 'Rated', 'Director', 'Plot', 'Poster', 'Response', 'imdbID'];
           for (let key in this.movie) {
@@ -27,7 +27,7 @@ angular.
           if (this.movie.isFavourite) {
             btn.classList.remove('active');
             this.movie.isFavourite = false;
-            let movieIndex = this.favourites.indexOfByProp({imdbID: $routeParams.movieID}, 'imdbID');
+            let movieIndex = this.favourites.indexOfByProp({imdbID: $stateParams.movieID}, 'imdbID');
             if (movieIndex !== -1) {
               this.favourites.splice(movieIndex, 1);
             }

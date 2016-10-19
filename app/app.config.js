@@ -4,28 +4,33 @@ angular
   .module('OMDbHero')
     .config([
       '$locationProvider',
-      '$routeProvider',
+      '$stateProvider',
       'localStorageServiceProvider',
-      ($locationProvider, $routeProvider, localStorageServiceProvider) => {
+      '$urlRouterProvider',
+      ($locationProvider, $stateProvider, localStorageServiceProvider, $urlRouterProvider) => {
         $locationProvider.hashPrefix('');
         $locationProvider.html5Mode(true);
-        $routeProvider.
-          when('/', {
-            template: '<movies-block favourites="MainCtrl.favourites" notifyevents="MainCtrl.notifyEvents"></movies-block>',
-            private: true
-          }).
-          when('/movie/:movieID', {
-            template: '<movie-details favourites="MainCtrl.favourites" notifyevents="MainCtrl.notifyEvents"></movie-details>',
-            private: true
-          }).
-          when('/login', {
-            template: '<entry-login notifyevents="MainCtrl.notifyEvents"></entry-lofin>'
-          }).
-          when('/signup', {
-            template: '<entry-register notifyevents="MainCtrl.notifyEvents"></entry-register>'
-          }).
-          otherwise({ redirectTo: '/' });
-
+        $stateProvider.state({
+          name: 'home',
+          url: '/',
+          template: '<movies-block favourites="MainCtrl.favourites" notifyevents="MainCtrl.notifyEvents"></movies-block>'
+        });
+        $stateProvider.state({
+          name: 'movieDetails',
+          url: '/movie/{movieID}',
+          template: '<movie-details favourites="MainCtrl.favourites" notifyevents="MainCtrl.notifyEvents"></movie-details>'
+        });
+        $stateProvider.state({
+          name: 'login',
+          url: '/login',
+          template: '<entry-login notifyevents="MainCtrl.notifyEvents"></entry-lofin>'
+        });
+        $stateProvider.state({
+          name: 'signup',
+          url: '/signup',
+          template: '<entry-register notifyevents="MainCtrl.notifyEvents"></entry-register>'
+        });
+        $urlRouterProvider.otherwise('/');
         localStorageServiceProvider
           .setPrefix('omdbhero');
       }])
@@ -41,15 +46,15 @@ angular
           if (!this.favourites) this.favourites = [];
         }])
 
-      .run( ['$rootScope', '$location', '$log', 'CONFIG',
-        function($rootScope, $location, $log, CONFIG) {
-          $rootScope.$on( '$routeChangeStart', (event, next) => {
-            if (!$rootScope.user.logined && next.private) {
-              if (CONFIG.debug) $log.log('Redirecting to /login');
-              $location.path( '/login' );
-            }
-          });
-        }])
+      // .run( ['$rootScope', '$location', '$log', 'CONFIG',
+      //   function($rootScope, $location, $log, CONFIG) {
+      //     $rootScope.$on( '$routeChangeStart', (event, next) => {
+      //       if (!$rootScope.user.logined && next.private) {
+      //         if (CONFIG.debug) $log.log('Redirecting to /login');
+      //         $location.path( '/login' );
+      //       }
+      //     });
+      //   }])
 
     .constant('CONFIG', {
       'moviesPerPage': 10,
