@@ -1,7 +1,6 @@
 const db = require('../db/db');
 const Movie = require('../models/movie');
 const getRequestedDataFromOMDb = require('./getRequestedDataFromOMDb');
-
 const itemsPerPage = 10;
 
 function getSearchRequestData(qObj) {

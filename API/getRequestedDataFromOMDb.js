@@ -1,5 +1,5 @@
 const fetch = require('node-fetch');
-const OMDbURL = 'http://www.omdbapi.com';
+const OMDbURL = require('../config/app.config.json').remoteBaseURL;
 
 function getRequestedDataFromOMDb(query) {
   return fetch(OMDbURL + query)

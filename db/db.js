@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
 const db = mongoose.connection;
+const dbConfig = require('./db.config.json');
 const initDB = require('./initDB');
-const dbConfig = require('./config.json');
 
 mongoose.connect(dbConfig.url);
 
