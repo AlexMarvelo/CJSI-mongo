@@ -64,6 +64,8 @@ angular.
       };
 
       const getFavourites = () => this.user.favourites || [];
+      const addFavourite = (movieID) => this.user.favourites.push(movieID);
+      const removeFavourite = (movieID) => this.user.favourites = this.user.favourites.filter(id => id != movieID);
 
       return {
         init,
@@ -72,6 +74,8 @@ angular.
         get,
         set,
         getFavourites,
+        addFavourite,
+        removeFavourite,
         serverRequest
       };
     }

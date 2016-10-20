@@ -1,8 +1,8 @@
 angular.
   module('moviesBlock').
   component('moviesBlock', {
-    controller: ['$scope', '$log', 'Movies', 'Movie', 'Notifications', 'CONFIG',
-      function MoviesBlockCtrl($scope, $log, Movies, Movie, Notifications, CONFIG) {
+    controller: ['$scope', '$log', 'Movies', 'Movie', 'User', 'Notifications', 'CONFIG',
+      function MoviesBlockCtrl($scope, $log, Movies, Movie, User, Notifications, CONFIG) {
         this.currentView = {
           totalResults: 0,
           currentPage: 1,
@@ -61,6 +61,7 @@ angular.
                 movie.isFavourite = !movie.isFavourite;
                 return;
               }
+              User.addFavourite(movie.imdbID);
             });
           } else {
             Movie.removeFromFavs({ movieID: movie.imdbID }, (res) => {
@@ -69,6 +70,7 @@ angular.
                 movie.isFavourite = !movie.isFavourite;
                 return;
               }
+              User.removeFavourite(movie.imdbID);
             });
           }
         };
