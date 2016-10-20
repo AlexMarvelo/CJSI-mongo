@@ -3,12 +3,13 @@ angular.
   component('moviesBlock', {
     controller: ['$scope', '$log', 'Movies', 'Movie', 'Notifications', 'CONFIG',
       function MoviesBlockCtrl($scope, $log, Movies, Movie, Notifications, CONFIG) {
+        this.currentView = {
+          totalResults: 0,
+          currentPage: 1,
+          Search: []
+        };
+
         this.$onInit = () => {
-          this.currentView = {
-            totalResults: 0,
-            currentPage: 1,
-            Search: []
-          };
           this.setPagination();
         };
 
@@ -60,8 +61,6 @@ angular.
                 movie.isFavourite = !movie.isFavourite;
                 return;
               }
-              console.log('query result:');
-              console.dir(res);
             });
           } else {
             Movie.removeFromFavs({ movieID: movie.imdbID }, (res) => {
@@ -70,17 +69,11 @@ angular.
                 movie.isFavourite = !movie.isFavourite;
                 return;
               }
-              console.log('query result:');
-              console.dir(res);
             });
           }
         };
       }
     ],
-
-    bindings: {
-      favourites: '='
-    },
 
     template: `
       <search-block></search-block>

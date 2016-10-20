@@ -5,7 +5,8 @@ const userSchema = mongoose.Schema({
   local: {
     email    : String,
     password : String,
-  }
+  },
+  favourites: Array
 });
 
 userSchema.methods.generateHash = function(password) {
@@ -14,6 +15,14 @@ userSchema.methods.generateHash = function(password) {
 
 userSchema.methods.validPassword = function(password) {
   return bcrypt.compareSync(password, this.local.password);
+};
+
+userSchema.methods.addToFavs = function(movieID) {
+  this.favourites.push(movieID);
+};
+
+userSchema.methods.getFavs = function() {
+  return this.favourites;
 };
 
 const User = mongoose.model('User', userSchema);

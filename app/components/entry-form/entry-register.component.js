@@ -4,8 +4,8 @@ angular.
   module('entryForm').
   component('entryRegister', {
     controller: [
-      '$log', '$scope', 'User', 'Authorization', 'Notifications',
-      function EntryLoginCtrl($log, $scope, User, Authorization, Notifications) {
+      '$log', '$scope', '$state', 'User', 'Notifications',
+      function EntryLoginCtrl($log, $scope, $state, User, Notifications) {
         this.static = {
           formHeader: 'Sign up',
           btnText: 'Sign up',
@@ -17,15 +17,14 @@ angular.
 
         this.signup = (event) => {
           event.preventDefault();
-          User.signup({
+          User.serverRequest.signup({
             email: $scope.email,
             password: $scope.password
           }, (user) => {
-            let isLogined = user.local != undefined;
-            if (!isLogined) return;
-            $log.debug('- signed up & logged in');
-            Authorization.setUser(user);
-            Authorization.go('home');
+            if (user.local == undefined) return;
+            $log.debug(`- signed up & logged in as ${user.local.email}`);
+            User.set(user);
+            $state.go('home');
           }, (error) => {
             if (error.status == 401) Notifications.add(Notifications.codes.unauthorized);
           });

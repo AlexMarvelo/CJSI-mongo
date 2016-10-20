@@ -1,7 +1,5 @@
 'use strict';
 
-require('angular-resource/angular-resource');
-
-angular.module('core.user', ['ngResource']);
+angular.module('core.user', []);
 
 require('./user.service');

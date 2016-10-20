@@ -2,6 +2,7 @@ const fetch = require('node-fetch');
 const OMDbURL = require('../config/app.config.json').remoteBaseURL;
 const db = require('../db/db');
 const Movie = require('../models/movie');
+const User = require('../models/user');
 const itemsPerPage = 10;
 const utils = {};
 
@@ -74,6 +75,40 @@ utils.getRequestedDataFromOMDb = (query) => {
       data.remoteSourse = true;
       return data;
     });
+};
+
+utils.addFavToUser = (user, movieID) => {
+  User.findOne({ 'local.email' :  user.local.email }, (err, user) => {
+
+    // if there are any errors, return the error
+    if (err) throw err;
+
+    // check to see if theres already a user with that email
+    if (!user) throw new Error('No such user was found');
+
+    user.favourites.push(movieID);
+    user.save((err) => {
+      if (err) throw err;
+      // console.log( user.getFavs() );
+    });
+  });
+};
+
+utils.removeFavFromUser = (user, movieID) => {
+  User.findOne({ 'local.email' :  user.local.email }, (err, user) => {
+
+    // if there are any errors, return the error
+    if (err) throw err;
+
+    // check to see if theres already a user with that email
+    if (!user) throw new Error('No such user was found');
+
+    user.favourites = user.favourites.filter(id => id != movieID);
+    user.save((err) => {
+      if (err) throw err;
+      // console.log( user.getFavs() );
+    });
+  });
 };
 
 module.exports = utils;

@@ -34,7 +34,7 @@ module.exports = (router, passport) => {
         return;
       }
       console.log(`- add ${req.params.movieID} to favs of ${req.user.local.email}`);
-      // TODO add to favs
+      utils.addFavToUser(req.user, req.params.movieID);
       break;
 
     case 'removefromfavs':
@@ -43,7 +43,7 @@ module.exports = (router, passport) => {
         return;
       }
       console.log(`- remove ${req.params.movieID} from favs of ${req.user.local.email}`);
-      // TODO remove from favs
+      utils.removeFavFromUser(req.user, req.params.movieID);
       break;
 
     default:

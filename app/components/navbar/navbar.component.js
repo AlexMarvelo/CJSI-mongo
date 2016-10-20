@@ -3,8 +3,8 @@
 angular.
   module('navbar').
   component('navbar', {
-    controller: ['$scope', '$state', '$log', 'CONFIG', 'User', 'Authorization',
-      function NavbarCtrl($scope, $state, $log, CONFIG, User, Authorization) {
+    controller: ['$scope', '$state', '$log', 'CONFIG', 'User',
+      function NavbarCtrl($scope, $state, $log, CONFIG, User) {
         this.static = {
           homeBtn: {
             link: '/',
@@ -27,16 +27,16 @@ angular.
           }
         };
 
-        $scope.$watch(Authorization.authorized, (newValue) => {
+        $scope.$watch(User.authorized, (newValue) => {
           this.logined = newValue;
-          this.user = Authorization.getUser();
+          this.user = User.get();
         });
 
         this.logout = (event) => {
           event.preventDefault();
-          User.logout(() => {
+          User.serverRequest.logout(() => {
             $log.debug('- logged out');
-            Authorization.clear();
+            User.clear();
             $state.go('login');
           });
         };

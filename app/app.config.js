@@ -46,10 +46,10 @@ angular
       }])
 
     .controller('OMDbHero.Controller', [
-      '$scope', '$rootScope', '$log', 'localStorageService', 'Authorization', 'Notifications', 'Status',
-      function($scope, $rootScope, $log, localStorageService, Authorization, Notifications, Status) {
+      '$scope', '$rootScope', '$log', 'localStorageService', 'User', 'Notifications', 'Status',
+      function($scope, $rootScope, $log, localStorageService, User, Notifications, Status) {
         this.$onInit = () => {
-          Authorization.init();
+          User.init();
           this.checkDBconnection();
           this.favourites = localStorageService.get('favourites') || [];
         };
@@ -66,10 +66,10 @@ angular
       }])
 
     .run([
-      '$rootScope', '$state', 'Authorization',
-      ($rootScope, $state, Authorization) => {
+      '$rootScope', '$state', 'User',
+      ($rootScope, $state, User) => {
         $rootScope.$on('$stateChangeSuccess', (event, toState) => {
-          if (!Authorization.authorized() &&
+          if (!User.authorized() &&
               toState.data &&
               toState.data.authorization &&
               toState.data.redirectTo) {
@@ -82,6 +82,5 @@ angular
       'moviesPerPage': 10,
       'appDomain': 'http://localhost:3000',
       'omdbAPI': '6f0a67d0',
-      'appName': 'OMDb Hero',
-      'debug': true
+      'appName': 'OMDb Hero'
     });
