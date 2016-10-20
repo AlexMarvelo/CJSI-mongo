@@ -19,7 +19,7 @@ angular.
           User.login({ email: $scope.email, password: $scope.password }, (user) => {
             let isLogined = user.local != undefined;
             if (!isLogined) return;
-            $log.debug('- logged in');
+            $log.debug(`- logged in as ${user.local.email}`);
             Authorization.setUser(user);
             Authorization.go('home');
           });
