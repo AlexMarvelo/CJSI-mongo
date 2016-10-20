@@ -4,8 +4,8 @@ angular.
   module('entryForm').
   component('entryRegister', {
     controller: [
-      '$log', '$scope', 'User', 'Authorization', 'CONFIG',
-      function EntryLoginCtrl($log, $scope, User, Authorization, CONFIG) {
+      '$log', '$scope', 'User', 'Authorization',
+      function EntryLoginCtrl($log, $scope, User, Authorization) {
         this.static = {
           formHeader: 'Sign up',
           btnText: 'Sign up',
@@ -23,7 +23,7 @@ angular.
           }, (user) => {
             let isLogined = user.local != undefined;
             if (!isLogined) return;
-            if (CONFIG.debug) $log.log('- signed up & logged in');
+            $log.debug('- signed up & logged in');
             Authorization.setUser(user);
             Authorization.go('home');
           });

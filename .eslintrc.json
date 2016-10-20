@@ -29,7 +29,7 @@
         ],
         "no-console": [
           "error",
-          { "allow": ["log", "error"] }
+          { "allow": ["log", "error", "dir"] }
         ]
     },
     "parserOptions": {

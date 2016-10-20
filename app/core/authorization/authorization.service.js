@@ -3,8 +3,8 @@
 angular.
   module('core.authorization').
   factory('Authorization', [
-    '$state', '$log', 'User', 'localStorageService', 'CONFIG',
-    function($state, $log, User, localStorageService, CONFIG) {
+    '$state', '$log', 'User', 'localStorageService',
+    function($state, $log, User, localStorageService) {
       const getAuthorized = () => this.authorized;
 
       const init = () => {
@@ -24,7 +24,7 @@ angular.
           if (user.local == undefined) return;
           this.authorized = true;
           this.user = user;
-          if (CONFIG.debug) $log.log(`- Authorization init with ${this.authorized}`);
+          $log.debug(`- Authorization init with ${this.authorized}`);
           localStorageService.set('lastAuth', this.authorized);
           localStorageService.set('user', this.user);
         });

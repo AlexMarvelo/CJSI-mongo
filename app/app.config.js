@@ -5,11 +5,13 @@ angular
     .config([
       '$locationProvider',
       '$stateProvider',
-      'localStorageServiceProvider',
+      '$logProvider',
       '$urlRouterProvider',
-      ($locationProvider, $stateProvider, localStorageServiceProvider, $urlRouterProvider) => {
+      'localStorageServiceProvider',
+      ($locationProvider, $stateProvider, $logProvider, $urlRouterProvider, localStorageServiceProvider) => {
         $locationProvider.hashPrefix('');
         $locationProvider.html5Mode(true);
+        $logProvider.debugEnabled(true);
         $stateProvider.state({
           name: 'home',
           url: '/',
@@ -17,7 +19,7 @@ angular
             authorization: true,
             redirectTo: 'login'
           },
-          template: '<movies-block favourites="MainCtrl.favourites" notifyevents="MainCtrl.notifyEvents"></movies-block>'
+          template: '<movies-block favourites="MainCtrl.favourites"></movies-block>'
         });
         $stateProvider.state({
           name: 'movieDetails',
@@ -26,17 +28,17 @@ angular
             authorization: true,
             redirectTo: 'login'
           },
-          template: '<movie-details favourites="MainCtrl.favourites" notifyevents="MainCtrl.notifyEvents"></movie-details>'
+          template: '<movie-details favourites="MainCtrl.favourites"></movie-details>'
         });
         $stateProvider.state({
           name: 'login',
           url: '/login',
-          template: '<entry-login notifyevents="MainCtrl.notifyEvents"></entry-lofin>'
+          template: '<entry-login></entry-lofin>'
         });
         $stateProvider.state({
           name: 'signup',
           url: '/signup',
-          template: '<entry-register notifyevents="MainCtrl.notifyEvents"></entry-register>'
+          template: '<entry-register></entry-register>'
         });
         $urlRouterProvider.otherwise('/');
         localStorageServiceProvider
@@ -47,7 +49,6 @@ angular
       '$scope', '$rootScope', '$log', 'localStorageService', 'Authorization',
       function($scope, $rootScope, $log, localStorageService, Authorization) {
         Authorization.init();
-        this.notifyEvents = [];
         $rootScope.user = {
           logined: true
         };

@@ -6,10 +6,12 @@ angular.module('core', [
   'core.movie',
   'core.status',
   'core.user',
-  'core.authorization'
+  'core.authorization',
+  'core.notifications'
 ]);
 
 require('./authorization/authorization.module');
+require('./notifications/notifications.module');
 require('./movies/movies.module');
 require('./movie/movie.module');
 require('./status/status.module');

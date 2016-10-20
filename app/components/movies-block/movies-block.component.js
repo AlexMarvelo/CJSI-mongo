@@ -1,8 +1,8 @@
 angular.
   module('moviesBlock').
   component('moviesBlock', {
-    controller: ['$scope', '$log', 'localStorageService', 'CONFIG',
-      function MoviesBlockCtrl($scope, $log, localStorageService, CONFIG) {
+    controller: ['$scope', '$log', 'localStorageService', 'Notifications', 'CONFIG',
+      function MoviesBlockCtrl($scope, $log, localStorageService, Notifications, CONFIG) {
         this.$onInit = () => {
           this.moviesOnPage = [];
           this.currentView = {
@@ -19,10 +19,10 @@ angular.
                 return this.favourites.indexOfByProp(movie, 'imdbID') === -1;
               })
             );
-            if (this.currentView.remoteSourse) this.notifyevents = [{code: 3}];
+            if (this.currentView.remoteSourse) Notifications.add(3);
           } else {
             this.moviesOnPage = this.favourites;
-            this.notifyevents = [{code: 2}];
+            Notifications.add(2);
           }
           this.setPagination();
         };
@@ -78,8 +78,7 @@ angular.
     ],
 
     bindings: {
-      favourites: '=',
-      notifyevents: '='
+      favourites: '='
     },
 
     template: `
