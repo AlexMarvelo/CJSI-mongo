@@ -5,39 +5,26 @@ angular.
   component('searchBlock', {
     controller: ['$scope', '$log', 'CONFIG', 'Movies',
       function SearchBlockCtrl($scope, $log, CONFIG, Movies) {
-        this.blockTitle = `Welcome to ${CONFIG.appName}`;
+        this.static = {
+          blockTitle: `Welcome to ${CONFIG.appName}`
+        };
 
         this.onSearchSubmit = (event, targetPage = 1) => {
           event.preventDefault();
-          this.currentview = Movies.query({
-            s: this.qstring,
-            y: this.qyear,
-            type: this.qtype,
-            page: targetPage
-          }, () => {
-            if (this.currentview.Response === 'True') {
-              this.currentview.currentPage = targetPage;
-            } else {
-              targetPage = 1;
-              this.currentview.Search = [];
-              this.currentviewtotalResults = 0;
-              this.currentview.currentPage = 1;
-            }
-            $scope.$parent.$ctrl.updateMoviesList();
-          });
+          Movies.loadMovies({
+            qstring: this.qstring,
+            qyear: this.qyear,
+            qtype: this.qtype
+          }, targetPage);
         };
       }
     ],
-
-    bindings: {
-      currentview: '='
-    },
 
     template: `
     <div class="container">
 
         <header class="jumbotron hero-spacer">
-            <h1>{{$ctrl.blockTitle}}</h1>
+            <h1>{{$ctrl.static.blockTitle}}</h1>
 
             <div class="row">
               <div class="col-sm-10 col-sm-push-1">

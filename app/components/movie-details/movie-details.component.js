@@ -60,6 +60,7 @@ angular.
         </div>
 
         <div class="col-sm-8">
+        <a ui-sref="home"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Back</a>
           <div class="page-header">
             <h1 class="text-left">
               {{$ctrl.movie.Title}} <small>{{ $ctrl.movie.Director !== 'N/A' ? 'directed by ' + $ctrl.movie.Director : ''}}</small>

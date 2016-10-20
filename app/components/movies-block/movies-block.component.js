@@ -1,31 +1,29 @@
 angular.
   module('moviesBlock').
   component('moviesBlock', {
-    controller: ['$scope', '$log', 'localStorageService', 'Notifications', 'CONFIG',
-      function MoviesBlockCtrl($scope, $log, localStorageService, Notifications, CONFIG) {
+    controller: ['$scope', '$log', 'localStorageService', 'Movies', 'Notifications', 'CONFIG',
+      function MoviesBlockCtrl($scope, $log, localStorageService, Movies, Notifications, CONFIG) {
         this.$onInit = () => {
-          this.moviesOnPage = [];
           this.currentView = {
             totalResults: 0,
-            currentPage: 1
+            currentPage: 1,
+            Search: []
           };
           this.setPagination();
         };
 
-        this.updateMoviesList = () => {
-          if (this.currentView.Response == 'True') {
-            this.moviesOnPage = this.favourites.concat(
-              this.currentView.Search.filter((movie) => {
-                return this.favourites.indexOfByProp(movie, 'imdbID') === -1;
-              })
-            );
-            if (this.currentView.remoteSourse) Notifications.add(3);
-          } else {
-            this.moviesOnPage = this.favourites;
-            Notifications.add(2);
+        $scope.$watch(
+          Movies.getCurrentView,
+          (newView) => {
+            this.currentView = newView;
+            if (this.currentView.Response == 'False') {
+              Notifications.add(2);
+            } else {
+              if (this.currentView.remoteSourse == true) Notifications.add(3);
+            }
+            this.setPagination();
           }
-          this.setPagination();
-        };
+        );
 
         this.setPagination = () => {
           this.pagination = [];
@@ -49,7 +47,7 @@ angular.
           event.preventDefault();
           let targetPage = parseInt(event.target.dataset.id);
           if (!targetPage) return;
-          $scope.$$childHead.$ctrl.onSearchSubmit(new Event('submit'), targetPage);
+          Movies.loadMovies(null, targetPage);
         };
 
         this.onFavouritesAddClick = (event) => {
@@ -82,12 +80,12 @@ angular.
     },
 
     template: `
-    <search-block currentview="$ctrl.currentView"></search-block>
+    <search-block></search-block>
 
     <div class="container" ng-click="$ctrl.onFavouritesAddClick($event)">
 
       <div class="row text-center">
-        <div ng-repeat="movie in $ctrl.moviesOnPage" class="movie-card col-sm-6 col-md-4 col-lg-3">
+        <div ng-repeat="movie in $ctrl.currentView.Search" class="movie-card col-sm-6 col-md-4 col-lg-3">
           <div class="thumbnail {{movie.isFavourite ? 'thumbnail-favourite' : ''}}" data-id="{{movie.imdbID}}">
             <a ui-sref="movieDetails({movieID: movie.imdbID})">
               <img ng-src="{{movie.Poster !== 'N/A' ? movie.Poster : 'http://placehold.it/280x390'}}" alt="{{movie.Title}}">
