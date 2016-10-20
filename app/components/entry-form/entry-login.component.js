@@ -3,8 +3,8 @@
 angular.
   module('entryForm').
   component('entryLogin', {
-    controller: ['$log', 'User', 'Authorization', 'CONFIG',
-      function EntryLoginCtrl($log, User, Authorization, CONFIG) {
+    controller: ['$scope', '$log', 'User', 'Authorization', 'CONFIG',
+      function EntryLoginCtrl($scope, $log, User, Authorization, CONFIG) {
         this.static = {
           formHeader: 'Login',
           btnText: 'Login',
@@ -16,12 +16,12 @@ angular.
 
         this.login = (event) => {
           event.preventDefault();
-          User.login({ email: 'admin@admin.com', password: 'admin' }, (user) => {
+          User.login({ email: $scope.email, password: $scope.password }, (user) => {
             let isLogined = user.local != undefined;
-            if (isLogined) {
-              Authorization.go('home');
-              if (CONFIG.debug) $log.log('- logged in');
-            }
+            if (!isLogined) return;
+            if (CONFIG.debug) $log.log('- logged in');
+            Authorization.setUser(user);
+            Authorization.go('home');
           });
         };
       }
@@ -34,8 +34,8 @@ angular.
           <form action="/user/login" method="post" class="entry-form" autocomplete="on" ng-submit="$ctrl.login($event)">
             <h2>{{$ctrl.static.formHeader}}</h2>
             <div class="input-group">
-              <input name="email" type="text" class="form-control" placeholder="Email" tabindex="1" aria-describedby="basic-addon1">
-              <input name="password" type="password" class="form-control" placeholder="Password" tabindex="2" aria-describedby="basic-addon2">
+              <input name="email" ng-model="email" type="text" class="form-control" placeholder="Email" tabindex="1" aria-describedby="basic-addon1">
+              <input name="password" ng-model="password" type="password" class="form-control" placeholder="Password" tabindex="2" aria-describedby="basic-addon2">
             </div>
             <button type="submit" class="btn btn-default" tabindex="3">{{$ctrl.static.btnText}}</button>
           </form>

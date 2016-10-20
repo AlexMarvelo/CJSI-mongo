@@ -35,9 +35,9 @@ angular.
           event.preventDefault();
           User.logout(() => {
             if (CONFIG.debug) $log.log('- logged out');
+            Authorization.clear();
+            $state.go('login');
           });
-          Authorization.clear();
-          $state.go('login');
         };
       }
     ],

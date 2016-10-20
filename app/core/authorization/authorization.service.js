@@ -6,10 +6,14 @@ angular.
     '$state', '$log', 'User', 'localStorageService', 'CONFIG',
     function($state, $log, User, localStorageService, CONFIG) {
       this.authorized  = localStorageService.get('lastAuth') || false;
+      const getAuthorized = () => this.authorized;
 
       const init = () => {
         update();
       };
+
+      const setUser = (user) => {this.user = user;};
+      const getUser = () => this.user;
 
       const update = () => {
         User.get(user => {
@@ -19,10 +23,9 @@ angular.
         });
       };
 
-      const getAuthorized = () => this.authorized;
-
       const clear = () => {
         this.authorized = false;
+        this.user = undefined;
         localStorageService.set('lastAuth', this.authorized);
       };
 
@@ -33,10 +36,12 @@ angular.
       };
 
       return {
-        init: init,
+        init,
         authorized: getAuthorized,
-        clear: clear,
-        go: go
+        clear,
+        go,
+        setUser,
+        getUser
       };
     }
   ]);
