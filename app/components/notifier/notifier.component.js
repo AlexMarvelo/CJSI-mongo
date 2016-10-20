@@ -35,12 +35,14 @@ angular.
     ],
 
     template: `
-      <div class="container notifier-container">
-        <div class="row">
-          <div class="col-sm-6 col-sm-push-3">
-            <div ng-repeat="notification in $ctrl.notifications" class="alert alert-{{notification.type}} notifier-alert text-center" role="alert">
-              {{notification.msg}}
-              <span class="glyphicon glyphicon-remove" aria-hidden="true" ng-click="$ctrl.removeNotification(notification.code)"></span>
+      <div class="notifier-container">
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-6 col-sm-push-3">
+              <div ng-repeat="notification in $ctrl.notifications" class="alert alert-{{notification.type}} notifier-alert text-center" role="alert">
+                {{notification.msg}}
+                <span class="glyphicon glyphicon-remove" aria-hidden="true" ng-click="$ctrl.removeNotification(notification.code)"></span>
+              </div>
             </div>
           </div>
         </div>

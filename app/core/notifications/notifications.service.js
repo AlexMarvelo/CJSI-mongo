@@ -7,10 +7,10 @@ angular.
       // types: success, info, warning, danger
       // codes: 1 - db connection failed
       //        2 - empty search result response
+      const timeout = 4000;
       const dbConnectionCode = 1;
       const emptyResult = 2;
       const remoteSourse = 3;
-      const timeout = 3000;
 
       this.notifications = [];
       this.notificationsLog = [];
