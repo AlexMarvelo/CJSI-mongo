@@ -28,6 +28,24 @@ module.exports = (router, passport) => {
         });
       break;
 
+    case 'addtofavs':
+      if (!req.user || !req.user.local) {
+        res.send({status: 5});
+        return;
+      }
+      console.log(`- add ${req.params.movieID} to favs of ${req.user.local.email}`);
+      // TODO add to favs
+      break;
+
+    case 'removefromfavs':
+      if (!req.user || !req.user.local) {
+        res.send({status: 5});
+        return;
+      }
+      console.log(`- remove ${req.params.movieID} from favs of ${req.user.local.email}`);
+      // TODO remove from favs
+      break;
+
     default:
       utils.getMovieByID(req.query.i)
         .then(JSON.stringify)

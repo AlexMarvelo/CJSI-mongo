@@ -9,8 +9,7 @@ body {
 }
 
 .notifier-container {
-  min-height: 10px;
-  position: absolute;
+  position: fixed;
   width: 100%;
   top: 80px;
   left: 0;
@@ -97,6 +96,14 @@ h1 {
 
 .page-header {
   margin-top: 20px;
+}
+
+.movie-poster {
+  width: 100%;
+}
+
+.searchfilter-input-group {
+  margin-bottom: 10px;
 }
 
 @media (min-width: 1200px) {

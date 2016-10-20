@@ -10,6 +10,18 @@ angular.
           params: {
             action: 'get'
           }
+        },
+        addToFavs: {
+          method: 'GET',
+          params: {
+            action: 'addtofavs'
+          }
+        },
+        removeFromFavs: {
+          method: 'GET',
+          params: {
+            action: 'removefromfavs'
+          }
         }
       });
     }

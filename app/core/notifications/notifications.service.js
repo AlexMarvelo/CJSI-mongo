@@ -5,15 +5,13 @@ angular.
   factory('Notifications', ['$timeout', '$log',
     function($timeout, $log) {
       // types: success, info, warning, danger
-      // codes: 1 - db connection failed
-      //        2 - empty search result response
-      //        2 - empty search result response
       const timeout = 4000;
       const codes = {
         dbConnectionCode: 1,
         emptyResult: 2,
         remoteSourse: 3,
-        unauthorized: 4
+        unauthorized: 4,
+        nopermission: 5
       };
 
       this.notifications = [];
@@ -52,22 +50,32 @@ angular.
           break;
         case codes.unauthorized:
           newNotification = {
-            msg: 'Authorization faild. Check email & password',
+            msg: 'Authorization faild. Please, check email & password',
             type: 'danger',
             code: codes.unauthorized
           };
           break;
+        case codes.nopermission:
+          newNotification = {
+            msg: 'Sorry, action is not permited',
+            type: 'danger',
+            code: codes.nopermission
+          };
         }
-        if (newNotification) {
-          this.notifications.push(newNotification);
-          this.notificationsLog.push(newNotification);
-          $log.debug(`- add notification ${!notification ? '(code ' + code + ')' : ':'}`);
-          if (notification) $log.debug(notification);
-          $timeout(() => remove(newNotification.code), timeout);
-        }
+        if (!newNotification) return;
+        this.notifications.push(newNotification);
+        this.notificationsLog.push(newNotification);
+        $log.debug(`- add notification ${!notification ? '(code ' + code + ')' : ':'}`);
+        if (notification) $log.debug(notification);
+        $timeout(() => remove(newNotification.code), timeout);
       };
 
-      const remove = (code) => {
+      const remove = (code, index) => {
+        if (index != undefined) {
+          $log.debug(`- remove notification (index ${index})`);
+          this.notifications.splice(index, 1);
+          return;
+        }
         $log.debug(`- remove notification (code ${code})`);
         this.notifications = this.notifications.filter(n => n.code != code);
       };
@@ -76,7 +84,8 @@ angular.
         get,
         getLog,
         add,
-        remove
+        remove,
+        codes
       };
     }
   ]);

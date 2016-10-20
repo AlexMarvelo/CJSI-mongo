@@ -46,13 +46,23 @@ angular
       }])
 
     .controller('OMDbHero.Controller', [
-      '$scope', '$rootScope', '$log', 'localStorageService', 'Authorization',
-      function($scope, $rootScope, $log, localStorageService, Authorization) {
-        Authorization.init();
-        $rootScope.user = {
-          logined: true
+      '$scope', '$rootScope', '$log', 'localStorageService', 'Authorization', 'Notifications', 'Status',
+      function($scope, $rootScope, $log, localStorageService, Authorization, Notifications, Status) {
+        this.$onInit = () => {
+          Authorization.init();
+          this.checkDBconnection();
+          this.favourites = localStorageService.get('favourites') || [];
         };
-        this.favourites = localStorageService.get('favourites') || [];
+
+        this.checkDBconnection = () => {
+          Status.dbconnection(res => {
+            if (!res.dbconnected) {
+              Notifications.add(Notifications.codes.dbConnectionCode);
+            } else {
+              Notifications.remove(Notifications.codes.dbConnectionCode);
+            }
+          });
+        };
       }])
 
     .run([

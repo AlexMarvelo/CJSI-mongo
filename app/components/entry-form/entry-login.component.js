@@ -23,7 +23,7 @@ angular.
             Authorization.setUser(user);
             Authorization.go('home');
           }, (error) => {
-            if (error.status == 401) Notifications.add(4);
+            if (error.status == 401) Notifications.add(Notifications.codes.unauthorized);
           });
         };
       }

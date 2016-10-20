@@ -1,8 +1,8 @@
 angular.
   module('moviesBlock').
   component('moviesBlock', {
-    controller: ['$scope', '$log', 'localStorageService', 'Movies', 'Notifications', 'CONFIG',
-      function MoviesBlockCtrl($scope, $log, localStorageService, Movies, Notifications, CONFIG) {
+    controller: ['$scope', '$log', 'Movies', 'Movie', 'Notifications', 'CONFIG',
+      function MoviesBlockCtrl($scope, $log, Movies, Movie, Notifications, CONFIG) {
         this.$onInit = () => {
           this.currentView = {
             totalResults: 0,
@@ -17,9 +17,9 @@ angular.
           (newView) => {
             this.currentView = newView;
             if (this.currentView.Response == 'False') {
-              Notifications.add(2);
+              Notifications.add(Notifications.codes.emptyResult);
             } else {
-              if (this.currentView.remoteSourse == true) Notifications.add(3);
+              if (this.currentView.remoteSourse == true) Notifications.add(Notifications.codes.remoteSourse);
             }
             this.setPagination();
           }
@@ -53,7 +53,27 @@ angular.
           event.preventDefault();
           if (!movie) return;
           movie.isFavourite = !movie.isFavourite;
-          localStorageService.set('favourites', this.favourites);
+          if (movie.isFavourite) {
+            Movie.addToFavs({ movieID: movie.imdbID }, (res) => {
+              if (res.status === Notifications.codes.nopermission) {
+                Notifications.add(Notifications.codes.nopermission);
+                movie.isFavourite = !movie.isFavourite;
+                return;
+              }
+              console.log('query result:');
+              console.dir(res);
+            });
+          } else {
+            Movie.removeFromFavs({ movieID: movie.imdbID }, (res) => {
+              if (res.status === Notifications.codes.nopermission) {
+                Notifications.add(Notifications.codes.nopermission);
+                movie.isFavourite = !movie.isFavourite;
+                return;
+              }
+              console.log('query result:');
+              console.dir(res);
+            });
+          }
         };
       }
     ],
@@ -71,7 +91,7 @@ angular.
           <div ng-repeat="movie in $ctrl.currentView.Search" class="movie-card col-sm-6 col-md-4 col-lg-3">
             <div class="thumbnail {{movie.isFavourite ? 'thumbnail-favourite' : ''}}" data-id="{{movie.imdbID}}">
               <a ui-sref="movieDetails({movieID: movie.imdbID})">
-                <img ng-src="{{movie.Poster !== 'N/A' ? movie.Poster : 'http://placehold.it/280x390'}}" alt="{{movie.Title}}">
+                <img class="movie-poster" ng-src="{{movie.Poster !== 'N/A' ? movie.Poster : 'http://placehold.it/280x390'}}" alt="{{movie.Title}}">
               </a>
               <div class="caption">
                 <a ui-sref="movieDetails({movieID: movie.imdbID})">
@@ -79,11 +99,13 @@ angular.
                 </a>
                 <span class="badge">{{movie.Year}}</span>
                 <span class="badge">{{movie.Type}}</span>
-                <button class="btn btn-default btn-favourite" type="button" ng-click="$ctrl.onFavouritesAddClick($event, movie)">
-                  <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
-                  <span class="btn-favourite-text btn-favourite-text-add">Add to favourites</span>
-                  <span class="btn-favourite-text btn-favourite-text-remove">Remove from favourites</span>
-                </button>
+                <div>
+                  <button class="btn btn-default btn-favourite" type="button" ng-click="$ctrl.onFavouritesAddClick($event, movie)">
+                    <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+                    <span class="btn-favourite-text btn-favourite-text-add">Add to favourites</span>
+                    <span class="btn-favourite-text btn-favourite-text-remove">Remove from favourites</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>

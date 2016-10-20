@@ -49,7 +49,7 @@ angular.
     <div class="container">
       <div class="row">
         <div class="col-sm-4 text-center">
-          <img ng-src="{{$ctrl.movie.Poster !== 'N/A' ? $ctrl.movie.Poster : 'http://placehold.it/280x390'}}" alt="{{$ctrl.movie.Title}}">
+          <img ng-src="{{$ctrl.movie.Poster !== 'N/A' ? $ctrl.movie.Poster : 'http://placehold.it/280x390'}}" class="movie-poster" alt="{{$ctrl.movie.Title}}">
           <div class="btn-container">
             <button class="btn btn-default btn-favourite {{$ctrl.movie.isFavourite ? 'active' : ''}}" ng-click="$ctrl.toggleFavourite($event)" type="button">
               <span class="glyphicon glyphicon-star" aria-hidden="true"></span>

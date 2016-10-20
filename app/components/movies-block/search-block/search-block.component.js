@@ -38,13 +38,13 @@ angular.
 
                   <div class="row">
                     <div class="col-sm-6">
-                      <div class="input-group input-group-sm">
+                      <div class="input-group input-group-sm searchfilter-input-group">
                         <span class="input-group-addon" id="basic-addon1">Year filter:</span>
                         <input ng-model="$ctrl.qyear" name="year" type="number" class="form-control" placeholder="Year" min="1700" max="2020">
                       </div>
                     </div>
                     <div class="col-sm-6">
-                      <div class="input-group input-group-sm">
+                      <div class="input-group input-group-sm searchfilter-input-group">
                         <span class="input-group-addon" id="basic-addon1">Type filter:</span>
                         <input ng-model="$ctrl.qtype" name="type" type="text" class="form-control" placeholder="Type (movie, series, episode, game)">
                       </div>
