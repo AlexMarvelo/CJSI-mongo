@@ -29,6 +29,7 @@ angular.
 
         $scope.$watch(Authorization.authorized, (newValue) => {
           this.logined = newValue;
+          this.user = Authorization.getUser();
         });
 
         this.logout = (event) => {
@@ -56,6 +57,7 @@ angular.
           </div>
           <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right" ng-switch on="$ctrl.logined">
+              <li ng-switch-when="true"><a>Hello, {{$ctrl.user.local.email}}</a></li>
               <li ng-switch-when="true"><a href="#" ng-click="$ctrl.logout($event)">{{$ctrl.static.logoutBtn.title}}</a></li>
               <li ng-switch-default><a ui-sref="{{$ctrl.static.loginBtn.state}}">{{$ctrl.static.loginBtn.title}}</a></li>
               <li ng-switch-default><a ui-sref="{{$ctrl.static.signupBtn.state}}">{{$ctrl.static.signupBtn.title}}</a></li>

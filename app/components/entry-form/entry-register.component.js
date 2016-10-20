@@ -17,7 +17,10 @@ angular.
 
         this.signup = (event) => {
           event.preventDefault();
-          User.signup({ email: $scope.email, password: $scope.password }, (user) => {
+          User.signup({
+            email: $scope.email,
+            password: $scope.password
+          }, (user) => {
             let isLogined = user.local != undefined;
             if (!isLogined) return;
             if (CONFIG.debug) $log.log('- signed up & logged in');
@@ -35,8 +38,8 @@ angular.
           <form action="/user/signup" method="post" class="entry-form" ng-submit="$ctrl.signup($event)">
             <h2>{{$ctrl.static.formHeader}}</h2>
             <div class="input-group">
-              <input name="email" ng-model="email" type="email" class="form-control" placeholder="Email" tabindex="1" aria-describedby="basic-addon2">
-              <input name="password"type="password" ng-model="password" class="form-control" placeholder="Password" tabindex="2" aria-describedby="basic-addon3">
+              <input name="email" ng-model="email" type="email" class="form-control" placeholder="Email" tabindex="1">
+              <input name="password"type="password" ng-model="password" class="form-control" placeholder="Password" tabindex="2">
             </div>
             <button type="submit" class="btn btn-default" tabindex="3">{{$ctrl.static.btnText}}</button>
           </form>
