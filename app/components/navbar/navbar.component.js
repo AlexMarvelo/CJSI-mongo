@@ -3,8 +3,8 @@
 angular.
   module('navbar').
   component('navbar', {
-    controller: ['$scope', 'CONFIG', 'User',
-      function NavbarCtrl($scope, CONFIG, User) {
+    controller: ['$scope', '$state', '$log', 'CONFIG', 'User', 'Authorization',
+      function NavbarCtrl($scope, $state, $log, CONFIG, User, Authorization) {
         this.static = {
           homeBtn: {
             link: '/',
@@ -34,11 +34,13 @@ angular.
           });
         };
 
-        this.logoutUser = (event) => {
+        this.logout = (event) => {
           event.preventDefault();
           User.logout(() => {
-            console.log('logouted');
+            if (CONFIG.debug) $log.log('- logouted');
           });
+          Authorization.clear();
+          $state.go('login');
         };
       }
     ],
@@ -60,7 +62,7 @@ angular.
                   <li><a ui-sref="{{$ctrl.static.loginBtn.state}}">{{$ctrl.static.loginBtn.title}}</a></li>
                   <li><a ui-sref="{{$ctrl.static.signupBtn.state}}">{{$ctrl.static.signupBtn.title}}</a></li>
                   <li><a href="#" ng-click="$ctrl.getUser($event)">Get user</a></li>
-                  <li><a href="#" ng-click="$ctrl.logoutUser($event)">{{$ctrl.static.logoutBtn.title}}</a></li>
+                  <li><a href="#" ng-click="$ctrl.logout($event)">{{$ctrl.static.logoutBtn.title}}</a></li>
                 </ul>
             </div>
         </div>

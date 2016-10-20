@@ -11,6 +11,18 @@ angular.
             action: 'get'
           }
         },
+        login: {
+          method: 'POST',
+          params: {
+            action: 'login'
+          }
+        },
+        signup: {
+          method: 'POST',
+          params: {
+            action: 'signup'
+          }
+        },
         logout: {
           method: 'GET',
           params: {

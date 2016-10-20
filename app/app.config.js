@@ -13,11 +13,19 @@ angular
         $stateProvider.state({
           name: 'home',
           url: '/',
+          data: {
+            authorization: true,
+            redirectTo: 'login'
+          },
           template: '<movies-block favourites="MainCtrl.favourites" notifyevents="MainCtrl.notifyEvents"></movies-block>'
         });
         $stateProvider.state({
           name: 'movieDetails',
           url: '/movie/{movieID}',
+          data: {
+            authorization: true,
+            redirectTo: 'login'
+          },
           template: '<movie-details favourites="MainCtrl.favourites" notifyevents="MainCtrl.notifyEvents"></movie-details>'
         });
         $stateProvider.state({
@@ -35,26 +43,30 @@ angular
           .setPrefix('omdbhero');
       }])
 
-      .controller('OMDbHero.Controller', [
-        '$scope', '$rootScope', '$log', 'localStorageService',
-        function($scope, $rootScope, $log, localStorageService) {
-          this.notifyEvents = [];
-          $rootScope.user = {
-            logined: true
-          };
-          this.favourites = localStorageService.get('favourites');
-          if (!this.favourites) this.favourites = [];
-        }])
+    .controller('OMDbHero.Controller', [
+      '$scope', '$rootScope', '$log', 'localStorageService', 'Authorization',
+      function($scope, $rootScope, $log, localStorageService, Authorization) {
+        Authorization.init();
+        this.notifyEvents = [];
+        $rootScope.user = {
+          logined: true
+        };
+        this.favourites = localStorageService.get('favourites') || [];
+      }])
 
-      // .run( ['$rootScope', '$location', '$log', 'CONFIG',
-      //   function($rootScope, $location, $log, CONFIG) {
-      //     $rootScope.$on( '$routeChangeStart', (event, next) => {
-      //       if (!$rootScope.user.logined && next.private) {
-      //         if (CONFIG.debug) $log.log('Redirecting to /login');
-      //         $location.path( '/login' );
-      //       }
-      //     });
-      //   }])
+    .run([
+      '$rootScope', '$state', 'Authorization',
+      ($rootScope, $state, Authorization) => {
+        $rootScope.$on('$stateChangeSuccess', (event, toState) => {
+          console.log(`Authorization.authorized(): ${Authorization.authorized()}`);
+          if (!Authorization.authorized() &&
+              toState.data &&
+              toState.data.authorization &&
+              toState.data.redirectTo) {
+            $state.go(toState.data.redirectTo);
+          }
+        });
+      }])
 
     .constant('CONFIG', {
       'moviesPerPage': 10,

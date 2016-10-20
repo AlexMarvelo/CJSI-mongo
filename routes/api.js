@@ -2,6 +2,7 @@ const db = require('../db/db');
 const utils = require('./utils');
 
 module.exports = (router, passport) => {
+
   // servises:
   router.get('/search', utils.isLoggedIn, (req, res) => {
     utils.getSearchRequestData(req.query)
@@ -13,8 +14,10 @@ module.exports = (router, passport) => {
       });
   });
 
+
   router.all('/movie/:movieID/:action', utils.isLoggedIn, function(req, res) {
     switch (req.params.action) {
+
     case 'get':
       utils.getMovieByID(req.params.movieID)
         .then(JSON.stringify)
@@ -24,6 +27,7 @@ module.exports = (router, passport) => {
           console.error(error);
         });
       break;
+
     default:
       utils.getMovieByID(req.query.i)
         .then(JSON.stringify)
@@ -35,6 +39,7 @@ module.exports = (router, passport) => {
     }
   });
 
+
   router.all('/status/:action', (req, res) => {
     switch (req.params.action) {
     case 'dbconnection':
@@ -45,29 +50,41 @@ module.exports = (router, passport) => {
     }
   });
 
-  router.all('/user/:action', function(req, res) {
-    switch (req.params.action) {
-    case 'get':
-      res.send(req.user);
-      break;
-    case 'logout':
-      req.logout();
-      res.redirect('/login');
-      break;
-    default:
+
+  router.post('/user/login',
+    passport.authenticate('local-login', {
+      failureFlash : true
+    }),
+    (req, res) => {
       res.send(req.user);
     }
-  });
+  );
 
-  router.post('/login', passport.authenticate('local-login', {
-    successRedirect : '/',
-    failureRedirect : '/login',
-    failureFlash : true
-  }));
+  router.post('/user/signup',
+    passport.authenticate('local-signup', {
+      failureFlash : true
+    }),
+    (req, res) => {
+      res.send(req.user);
+    }
+  );
 
-  router.post('/signup', passport.authenticate('local-signup', {
-    successRedirect : '/',
-    failureRedirect : '/signup',
-    failureFlash : true
-  }));
+  router.all('/user/:action',
+    (req, res) => {
+      switch (req.params.action) {
+
+      case 'get':
+        res.send(req.user);
+        break;
+
+      case 'logout':
+        req.logout();
+        res.redirect('/login');
+        break;
+
+      default:
+        res.send(req.user);
+      }
+    }
+  );
 };
