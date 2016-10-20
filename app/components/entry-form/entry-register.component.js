@@ -4,8 +4,8 @@ angular.
   module('entryForm').
   component('entryRegister', {
     controller: [
-      '$log', '$scope', 'User', 'Authorization',
-      function EntryLoginCtrl($log, $scope, User, Authorization) {
+      '$log', '$scope', 'User', 'Authorization', 'Notifications',
+      function EntryLoginCtrl($log, $scope, User, Authorization, Notifications) {
         this.static = {
           formHeader: 'Sign up',
           btnText: 'Sign up',
@@ -26,6 +26,8 @@ angular.
             $log.debug('- signed up & logged in');
             Authorization.setUser(user);
             Authorization.go('home');
+          }, (error) => {
+            if (error.status == 401) Notifications.add(4);
           });
         };
       }

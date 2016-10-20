@@ -3,8 +3,8 @@
 angular.
   module('entryForm').
   component('entryLogin', {
-    controller: ['$scope', '$log', 'User', 'Authorization',
-      function EntryLoginCtrl($scope, $log, User, Authorization) {
+    controller: ['$scope', '$log', 'User', 'Authorization', 'Notifications',
+      function EntryLoginCtrl($scope, $log, User, Authorization, Notifications) {
         this.static = {
           formHeader: 'Login',
           btnText: 'Login',
@@ -22,6 +22,8 @@ angular.
             $log.debug(`- logged in as ${user.local.email}`);
             Authorization.setUser(user);
             Authorization.go('home');
+          }, (error) => {
+            if (error.status == 401) Notifications.add(4);
           });
         };
       }

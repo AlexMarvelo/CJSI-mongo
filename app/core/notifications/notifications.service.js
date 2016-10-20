@@ -7,10 +7,14 @@ angular.
       // types: success, info, warning, danger
       // codes: 1 - db connection failed
       //        2 - empty search result response
+      //        2 - empty search result response
       const timeout = 4000;
-      const dbConnectionCode = 1;
-      const emptyResult = 2;
-      const remoteSourse = 3;
+      const codes = {
+        dbConnectionCode: 1,
+        emptyResult: 2,
+        remoteSourse: 3,
+        unauthorized: 4
+      };
 
       this.notifications = [];
       this.notificationsLog = [];
@@ -25,25 +29,32 @@ angular.
         }
         let newNotification;
         switch (code) {
-        case dbConnectionCode:
+        case codes.dbConnectionCode:
           newNotification = {
             msg: 'Connection to local database failed. Remote one will be used',
             type: 'warning',
-            code: dbConnectionCode
+            code: codes.dbConnectionCode
           };
           break;
-        case emptyResult:
+        case codes.emptyResult:
           newNotification = {
             msg: 'No movies were found, sorry',
             type: 'danger',
-            code: emptyResult
+            code: codes.emptyResult
           };
           break;
-        case remoteSourse:
+        case codes.remoteSourse:
           newNotification = {
             msg: 'No results from local database, remote one was used',
             type: 'info',
-            code: remoteSourse
+            code: codes.remoteSourse
+          };
+          break;
+        case codes.unauthorized:
+          newNotification = {
+            msg: 'Authorization faild. Check email & password',
+            type: 'danger',
+            code: codes.unauthorized
           };
           break;
         }

@@ -27,7 +27,6 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(flash());
 
 // required for passport session
 app.use(session({
@@ -38,8 +37,10 @@ app.use(session({
   store: new MongoStore({
     url: dbConfig.url,
     collection: 'sessions'
-  })
+  }),
+  cookie: { secure: false }
 }));
+app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 require('./routes/routes')(app, passport);
