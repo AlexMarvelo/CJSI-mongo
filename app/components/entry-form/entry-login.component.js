@@ -3,8 +3,8 @@
 angular.
   module('entryForm').
   component('entryLogin', {
-    controller: ['User', 'Authorization',
-      function EntryLoginCtrl(User, Authorization) {
+    controller: ['$log', 'User', 'Authorization', 'CONFIG',
+      function EntryLoginCtrl($log, User, Authorization, CONFIG) {
         this.static = {
           formHeader: 'Login',
           btnText: 'Login',
@@ -18,7 +18,10 @@ angular.
           event.preventDefault();
           User.login({ email: 'admin@admin.com', password: 'admin' }, (user) => {
             let isLogined = user.local != undefined;
-            if (isLogined) Authorization.go('home');
+            if (isLogined) {
+              Authorization.go('home');
+              if (CONFIG.debug) $log.log('- logged in');
+            }
           });
         };
       }

@@ -58,7 +58,6 @@ angular
       '$rootScope', '$state', 'Authorization',
       ($rootScope, $state, Authorization) => {
         $rootScope.$on('$stateChangeSuccess', (event, toState) => {
-          console.log(`Authorization.authorized(): ${Authorization.authorized()}`);
           if (!Authorization.authorized() &&
               toState.data &&
               toState.data.authorization &&
