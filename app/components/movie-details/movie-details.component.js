@@ -3,86 +3,124 @@
 angular.
   module('movieDetails').
   component('movieDetails', {
-    controller: ['$scope', '$log', '$stateParams', 'localStorageService', 'Movie', 'CONFIG',
-      function MovieDetailsCtrl($scope, $log, $stateParams, localStorageService, Movie) {
-
-        this.movie = Movie.get({movieID: $stateParams.movieID}, () => {
-          this.movie.isFavourite = this.favourites.indexOfByProp({imdbID: $stateParams.movieID}, 'imdbID') !== -1;
-          this.tableDetails = {};
-          let skippingKeys = ['Title', 'Rated', 'Director', 'Plot', 'Poster', 'Response', 'imdbID'];
-          for (let key in this.movie) {
-            if (!this.movie.hasOwnProperty(key) ||
-                skippingKeys.indexOf(key) !== -1 ||
-                this.movie[key] === 'N/A') continue;
-            this.tableDetails[key] = this.movie[key];
-          }
-        });
+    controller: ['$scope', '$log', '$stateParams', 'Movie', 'User',
+      function MovieDetailsCtrl($scope, $log, $stateParams, Movie, User) {
         this.staticText = {
           tableHeader: 'Movie details',
         };
+        this.tableDetails = {};
 
-        this.toggleFavourite = function(event) {
+        this.$onInit = () => {
+          Movie.get({movieID: $stateParams.movieID}, (movie) => {
+            this.movie = movie;
+            this.movie.comments = movie.comments || [{
+              user: 'admin@admin.com',
+              text: 'Nice movie! Recommend',
+              timestamp: new Date()
+            }, {
+              user: 'admin@gmail.com',
+              text: 'Didn\'t like it(((',
+              timestamp: new Date()
+            }];
+            this.movie.comments.forEach(comment => {
+              comment.timestampString =
+                `${comment.timestamp.getDate()<10?'0':''}${comment.timestamp.getDate()}.${comment.timestamp.getMonth()+1<10?'0':''}${comment.timestamp.getMonth()+1} ` +
+                `${comment.timestamp.getHours()}${!comment.timestamp.getHours()?'0':''}:${comment.timestamp.getMinutes()<10?'0':''}${comment.timestamp.getMinutes()}${!comment.timestamp.getMinutes()?'0':''}`;
+            });
+            this.movie.isFavourite = User.getFavourites().indexOf(movie.imdbID) != -1;
+            const tableFields = ['Year', 'Released', 'Runtime', 'Genre', 'Writer', 'Actors', 'Language', 'Country', 'Awards', 'imdbRating', 'imdbVotes', 'Type'];
+            tableFields.forEach(key => {
+              if (!movie.hasOwnProperty(key) ||
+                  movie[key] === 'N/A') return;
+              this.tableDetails[key] = movie[key];
+            });
+          });
+        };
+
+        this.onCommentFormSubmit = (event) => {
           event.preventDefault();
-          let btn = window.findAncestor(event.target, 'btn-favourite');
-          if (this.movie.isFavourite) {
-            btn.classList.remove('active');
-            this.movie.isFavourite = false;
-            let movieIndex = this.favourites.indexOfByProp({imdbID: $stateParams.movieID}, 'imdbID');
-            if (movieIndex !== -1) {
-              this.favourites.splice(movieIndex, 1);
-            }
-          } else {
-            btn.classList.add('active');
-            this.movie.isFavourite = true;
-            this.favourites.push(this.movie);
-          }
-          localStorageService.set('favourites', this.favourites);
+          console.log(this.commentText);
+        };
+
+        this.toggleFavourite = (event) => {
+          event.preventDefault();
+          console.log(this.movie.isFavourite);
         };
       }
     ],
 
-    bindings: {
-      favourites: '='
-    },
-
     template: `
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-4 text-center">
-          <img ng-src="{{$ctrl.movie.Poster !== 'N/A' ? $ctrl.movie.Poster : 'http://placehold.it/280x390'}}" class="movie-poster" alt="{{$ctrl.movie.Title}}">
-          <div class="btn-container">
-            <button class="btn btn-default btn-favourite {{$ctrl.movie.isFavourite ? 'active' : ''}}" ng-click="$ctrl.toggleFavourite($event)" type="button">
-              <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
-              <span class="btn-favourite-text btn-favourite-text-add">Add to favourites</span>
-              <span class="btn-favourite-text btn-favourite-text-remove">Remove from favourites</span>
-            </button>
-          </div>
-        </div>
-
-        <div class="col-sm-8">
-        <a ui-sref="home"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Back</a>
-          <div class="page-header">
-            <h1 class="text-left">
-              {{$ctrl.movie.Title}} <small>{{ $ctrl.movie.Director !== 'N/A' ? 'directed by ' + $ctrl.movie.Director : ''}}</small>
-            </h1>
-          </div>
-
-          <div class="panel panel-default">
-            <div class="panel-heading">{{$ctrl.staticText.tableHeader}}</div>
-            <table class="table">
-              <tbody>
-                <tr ng-repeat="(key, value) in $ctrl.tableDetails">
-                  <th scope="row">{{key}}</th>
-                  <td>{{value}}</td>
-                </tr>
-              </tbody>
-            </table>
-            <div class="panel-body">
-              <p>{{$ctrl.movie.Plot}}</p>
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-4 text-center">
+            <img ng-src="{{$ctrl.movie.Poster !== 'N/A' ? $ctrl.movie.Poster : 'http://placehold.it/280x390'}}" class="movie-poster" alt="{{$ctrl.movie.Title}}">
+            <div class="btn-container">
+              <button class="btn btn-default btn-favourite {{$ctrl.movie.isFavourite ? 'active' : ''}}" ng-click="$ctrl.toggleFavourite($event)" type="button">
+                <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+                <span class="btn-favourite-text btn-favourite-text-add">Add to favourites</span>
+                <span class="btn-favourite-text btn-favourite-text-remove">Remove from favourites</span>
+              </button>
             </div>
+          </div>
+
+          <div class="col-sm-8">
+            <a ui-sref="home"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Back</a>
+
+            <div class="page-header">
+              <h1 class="text-left">
+                {{$ctrl.movie.Title}} <small>{{ $ctrl.movie.Director !== 'N/A' ? 'directed by ' + $ctrl.movie.Director : ''}}</small>
+              </h1>
+            </div>
+
+            <div class="panel panel-default">
+              <div class="panel-heading"><h4>{{$ctrl.staticText.tableHeader}}</h4></div>
+              <table class="table">
+                <tbody>
+                  <tr ng-repeat="(key, value) in $ctrl.tableDetails">
+                    <th scope="row">{{key}}</th>
+                    <td>{{value}}</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="panel-body">
+                <p>{{$ctrl.movie.Plot}}</p>
+              </div>
+            </div>
+
+            <div class="panel panel-default">
+              <div class="panel-heading"><h4>Comments</h4></div>
+              <div class="panel-body">
+                <ul class="media-list">
+                  <li class="media comment" ng-repeat="comment in $ctrl.movie.comments">
+                    <div class="media-left">
+                      <a href="#">
+                        <img class="media-object" alt="64x64" data-src="holder.js/64x64" style="width: 64px; height: 64px;" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PCEtLQpTb3VyY2UgVVJMOiBob2xkZXIuanMvNjR4NjQKQ3JlYXRlZCB3aXRoIEhvbGRlci5qcyAyLjYuMC4KTGVhcm4gbW9yZSBhdCBodHRwOi8vaG9sZGVyanMuY29tCihjKSAyMDEyLTIwMTUgSXZhbiBNYWxvcGluc2t5IC0gaHR0cDovL2ltc2t5LmNvCi0tPjxkZWZzPjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+PCFbQ0RBVEFbI2hvbGRlcl8xNTdlNmI1ODYyZSB0ZXh0IHsgZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjEwcHQgfSBdXT48L3N0eWxlPjwvZGVmcz48ZyBpZD0iaG9sZGVyXzE1N2U2YjU4NjJlIj48cmVjdCB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIGZpbGw9IiNFRUVFRUUiLz48Zz48dGV4dCB4PSIxMy40Njg3NSIgeT0iMzYuNSI+NjR4NjQ8L3RleHQ+PC9nPjwvZz48L3N2Zz4=" data-holder-rendered="true">
+                      </a>
+                    </div>
+                    <div class="media-body comment-body">
+                      <span class="comment-timestamp">{{comment.timestampString}}</span>
+                      <h6 class="media-heading comment-heading">{{comment.user}}</h6>
+                      <p>{{comment.text}}</p>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="panel-footer">
+                <form action="comment/add" method="POST" class="comment-form" autocomplete="off" ng-submit="$ctrl.onCommentFormSubmit($event)">
+                <div class="row">
+                  <div class="col-lg-9 col-sm-8">
+                    <textarea class="form-control comment-textarea" rows="3" ng-model="$ctrl.commentText"></textarea>
+                  </div>
+                  <div class="col-lg-3 col-sm-4 text-right">
+                    <button type="submit" class="btn btn-default comment-btn">Leave comment</button>
+                  </div>
+                </div>
+                </form>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
-    </div>
     `,
   });

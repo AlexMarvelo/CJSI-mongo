@@ -106,6 +106,28 @@ h1 {
   margin-bottom: 10px;
 }
 
+.comment-heading {
+  padding-right: 80px;
+}
+.comment-body {
+  position: relative;
+}
+.comment-timestamp {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.comment-textarea {
+  margin-bottom: 10px;
+  max-width: 100%;
+}
+
+@media screen and (min-width: 768px) {
+  .comment-btn {
+    width: 100%;
+  }
+}
+
 @media (min-width: 1200px) {
   .col-lg-3:nth-child(4n+1) {
     clear: both;

@@ -19,7 +19,7 @@ angular
             authorization: true,
             redirectTo: 'login'
           },
-          template: '<movies-block favourites="MainCtrl.favourites"></movies-block>'
+          template: '<movies-block></movies-block>'
         });
         $stateProvider.state({
           name: 'movieDetails',
@@ -28,7 +28,7 @@ angular
             authorization: true,
             redirectTo: 'login'
           },
-          template: '<movie-details favourites="MainCtrl.favourites"></movie-details>'
+          template: '<movie-details></movie-details>'
         });
         $stateProvider.state({
           name: 'login',

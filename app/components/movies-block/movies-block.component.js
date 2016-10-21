@@ -50,7 +50,7 @@ angular.
           Movies.loadMovies(null, page.number);
         };
 
-        this.onFavouritesAddClick = (event, movie) => {
+        this.toggleFavourite = (event, movie) => {
           event.preventDefault();
           if (!movie) return;
           movie.isFavourite = !movie.isFavourite;
@@ -95,7 +95,7 @@ angular.
                 <span class="badge">{{movie.Year}}</span>
                 <span class="badge">{{movie.Type}}</span>
                 <div>
-                  <button class="btn btn-default btn-favourite" type="button" ng-click="$ctrl.onFavouritesAddClick($event, movie)">
+                  <button class="btn btn-default btn-favourite" type="button" ng-click="$ctrl.toggleFavourite($event, movie)">
                     <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
                     <span class="btn-favourite-text btn-favourite-text-add">Add to favourites</span>
                     <span class="btn-favourite-text btn-favourite-text-remove">Remove from favourites</span>
