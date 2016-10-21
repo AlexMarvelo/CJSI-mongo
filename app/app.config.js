@@ -55,7 +55,7 @@ angular
         };
 
         this.checkDBconnection = () => {
-          Status.dbconnection(res => {
+          Status.serverRequest.dbconnection(res => {
             if (!res.dbconnected) {
               Notifications.add(Notifications.codes.dbConnectionCode);
             } else {

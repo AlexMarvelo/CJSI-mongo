@@ -3,15 +3,15 @@
 angular.
   module('movieDetails').
   component('movieDetails', {
-    controller: ['$scope', '$log', '$stateParams', 'Movie', 'User',
-      function MovieDetailsCtrl($scope, $log, $stateParams, Movie, User) {
+    controller: ['$scope', '$log', '$stateParams', 'Movie', 'User', 'Comments', 'Notifications',
+      function MovieDetailsCtrl($scope, $log, $stateParams, Movie, User, Comments, Notifications) {
         this.staticText = {
           tableHeader: 'Movie details',
         };
         this.tableDetails = {};
 
         this.$onInit = () => {
-          Movie.get({movieID: $stateParams.movieID}, (movie) => {
+          Movie.serverRequest.get({movieID: $stateParams.movieID}, (movie) => {
             this.movie = movie;
             this.movie.comments = movie.comments || [{
               user: 'admin@admin.com',
@@ -39,12 +39,40 @@ angular.
 
         this.onCommentFormSubmit = (event) => {
           event.preventDefault();
-          console.log(this.commentText);
+          Comments.serverRequest.add({
+            movieID: this.movie.imdbID,
+            commentText: this.commentText,
+            timestamp: new Date()
+          }, res => {
+            console.dir(res);
+          });
         };
 
         this.toggleFavourite = (event) => {
           event.preventDefault();
-          console.log(this.movie.isFavourite);
+          let movie = this.movie;
+          movie.isFavourite = !movie.isFavourite;
+          if (movie.isFavourite) {
+            User.addFavourite(movie.imdbID);
+            Movie.serverRequest.addToFavs({ movieID: movie.imdbID }, (res) => {
+              if (res.status != undefined) Notifications.add(res.status);
+              if (res.status != Notifications.codes.success) {
+                movie.isFavourite = !movie.isFavourite;
+                User.removeFavourite(movie.imdbID);
+                return;
+              }
+            });
+          } else {
+            User.removeFavourite(movie.imdbID);
+            Movie.serverRequest.removeFromFavs({ movieID: movie.imdbID }, (res) => {
+              if (res.status != undefined) Notifications.add(res.status);
+              if (res.status != Notifications.codes.success) {
+                movie.isFavourite = !movie.isFavourite;
+                User.addFavourite(movie.imdbID);
+                return;
+              }
+            });
+          }
         };
       }
     ],

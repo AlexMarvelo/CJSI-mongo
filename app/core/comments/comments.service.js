@@ -1,32 +1,32 @@
 'use strict';
 
 angular.
-  module('core.movies').
-  factory('Movie', ['$resource', 'CONFIG',
+  module('core.comments').
+  factory('Comments', ['$resource', 'CONFIG',
     ($resource, CONFIG) => {
-      const serverRequest = $resource(`${CONFIG.appDomain}/movie/:movieID/:action`, {movieID: 0, action: 'get'}, {
+      const serverRequest = $resource(`${CONFIG.appDomain}/comments/:movieID/:action`, {movieID: 0, action: 'get'}, {
         get: {
           method: 'GET',
           params: {
             action: 'get'
           }
         },
-        addToFavs: {
+        add: {
           method: 'GET',
           params: {
-            action: 'addtofavs'
+            action: 'add'
           }
         },
-        removeFromFavs: {
+        remove: {
           method: 'GET',
           params: {
-            action: 'removefromfavs'
+            action: 'remove'
           }
         }
       });
 
       return {
-        serverRequest,
+        serverRequest
       };
     }
   ]);

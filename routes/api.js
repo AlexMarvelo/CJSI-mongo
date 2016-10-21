@@ -29,21 +29,13 @@ module.exports = (router, passport) => {
       break;
 
     case 'addtofavs':
-      if (!req.user || !req.user.local) {
-        res.send({status: 5});
-        return;
-      }
       console.log(`- add ${req.params.movieID} to favs of ${req.user.local.email}`);
-      utils.addFavToUser(req.user, req.params.movieID);
+      utils.addFavToUser(res, req.user, req.params.movieID);
       break;
 
     case 'removefromfavs':
-      if (!req.user || !req.user.local) {
-        res.send({status: 5});
-        return;
-      }
       console.log(`- remove ${req.params.movieID} from favs of ${req.user.local.email}`);
-      utils.removeFavFromUser(req.user, req.params.movieID);
+      utils.removeFavFromUser(res, req.user, req.params.movieID);
       break;
 
     default:
@@ -87,7 +79,7 @@ module.exports = (router, passport) => {
     }
   );
 
-  router.all('/user/:action',
+  router.all('/user/:action', utils.isLoggedIn,
     (req, res) => {
       switch (req.params.action) {
 

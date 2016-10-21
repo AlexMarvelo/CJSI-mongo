@@ -12,16 +12,13 @@ let props = {
 
 
 utils.isLoggedIn = (req, res, next) => {
-  console.log(`- private route requested. isAuthenticated = ${req.isAuthenticated()}`);
-  if (req.isAuthenticated()) return next();
+  if (req.isAuthenticated()) {
+    console.log(`- private route requested. access allowed. user: ${req.user.local.email}`);
+    return next();
+  }
+  console.log('- private route requested. access denied');
+  // res.send({status: 5});
   res.redirect('/login');
-};
-
-
-utils.isLoggedOut = (req, res, next) => {
-  console.log(`- login/signup route requested. isAuthenticated = ${req.isAuthenticated()}`);
-  if (!req.isAuthenticated()) return next();
-  res.redirect('/');
 };
 
 
@@ -57,6 +54,7 @@ utils.getSearchRequestData = (qObj) => {
     });
 };
 
+
 utils.getQString = (qObj) => {
   let qString = '?';
   for (let prop in qObj) {
@@ -77,7 +75,8 @@ utils.getRequestedDataFromOMDb = (query) => {
     });
 };
 
-utils.addFavToUser = (user, movieID) => {
+
+utils.addFavToUser = (res, user, movieID) => {
   User.findOne({ 'local.email' :  user.local.email }, (err, user) => {
 
     // if there are any errors, return the error
@@ -89,12 +88,13 @@ utils.addFavToUser = (user, movieID) => {
     user.favourites.push(movieID);
     user.save((err) => {
       if (err) throw err;
-      // console.log( user.getFavs() );
+      res.send({status: 200});
     });
   });
 };
 
-utils.removeFavFromUser = (user, movieID) => {
+
+utils.removeFavFromUser = (res, user, movieID) => {
   User.findOne({ 'local.email' :  user.local.email }, (err, user) => {
 
     // if there are any errors, return the error
@@ -106,9 +106,10 @@ utils.removeFavFromUser = (user, movieID) => {
     user.favourites = user.favourites.filter(id => id != movieID);
     user.save((err) => {
       if (err) throw err;
-      // console.log( user.getFavs() );
+      res.send({status:200});
     });
   });
 };
+
 
 module.exports = utils;

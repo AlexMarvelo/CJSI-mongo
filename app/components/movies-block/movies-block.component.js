@@ -55,22 +55,24 @@ angular.
           if (!movie) return;
           movie.isFavourite = !movie.isFavourite;
           if (movie.isFavourite) {
-            Movie.addToFavs({ movieID: movie.imdbID }, (res) => {
-              if (res.status === Notifications.codes.nopermission) {
-                Notifications.add(Notifications.codes.nopermission);
+            User.addFavourite(movie.imdbID);
+            Movie.serverRequest.addToFavs({ movieID: movie.imdbID }, (res) => {
+              if (res.status != undefined) Notifications.add(res.status);
+              if (res.status != Notifications.codes.success) {
                 movie.isFavourite = !movie.isFavourite;
+                User.removeFavourite(movie.imdbID);
                 return;
               }
-              User.addFavourite(movie.imdbID);
             });
           } else {
-            Movie.removeFromFavs({ movieID: movie.imdbID }, (res) => {
-              if (res.status === Notifications.codes.nopermission) {
-                Notifications.add(Notifications.codes.nopermission);
+            User.removeFavourite(movie.imdbID);
+            Movie.serverRequest.removeFromFavs({ movieID: movie.imdbID }, (res) => {
+              if (res.status != undefined) Notifications.add(res.status);
+              if (res.status != Notifications.codes.success) {
                 movie.isFavourite = !movie.isFavourite;
+                User.addFavourite(movie.imdbID);
                 return;
               }
-              User.removeFavourite(movie.imdbID);
             });
           }
         };

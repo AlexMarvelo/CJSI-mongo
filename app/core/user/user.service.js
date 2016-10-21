@@ -64,8 +64,16 @@ angular.
       };
 
       const getFavourites = () => this.user.favourites || [];
-      const addFavourite = (movieID) => this.user.favourites.push(movieID);
-      const removeFavourite = (movieID) => this.user.favourites = this.user.favourites.filter(id => id != movieID);
+      const addFavourite = (movieID) => {
+        this.user.favourites.push(movieID);
+        $log.debug(`- add ${movieID} to favs of ${this.user.local.email}`);
+        localStorageService.set('user', this.user);
+      };
+      const removeFavourite = (movieID) => {
+        this.user.favourites = this.user.favourites.filter(id => id != movieID);
+        $log.debug(`- remove ${movieID} from favs of ${this.user.local.email}`);
+        localStorageService.set('user', this.user);
+      };
 
       return {
         init,

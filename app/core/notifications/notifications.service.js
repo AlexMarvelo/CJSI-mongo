@@ -11,7 +11,8 @@ angular.
         emptyResult: 2,
         remoteSourse: 3,
         unauthorized: 4,
-        nopermission: 5
+        nopermission: 5,
+        success: 200
       };
 
       this.notifications = [];
@@ -61,6 +62,14 @@ angular.
             type: 'danger',
             code: codes.nopermission
           };
+          break;
+        case codes.success:
+          newNotification = {
+            msg: 'Server request was executed successfully',
+            type: 'success',
+            code: codes.success
+          };
+          break;
         }
         if (!newNotification) return;
         this.notifications.push(newNotification);
