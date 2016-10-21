@@ -3,6 +3,7 @@ const OMDbURL = require('../config/app.config.json').remoteBaseURL;
 const db = require('../db/db');
 const Movie = require('../models/movie');
 const User = require('../models/user');
+const Comment = require('../models/comment');
 const itemsPerPage = 10;
 const utils = {};
 
@@ -86,7 +87,8 @@ utils.getRequestedDataFromOMDb = (query) => {
 };
 
 
-utils.addFavToUser = (res, user, movieID) => {
+utils.addFavToUser = (req, res, user, movieID) => {
+  console.log(`- add ${movieID} to favs of ${user.local.email}`);
   User.findOne({ 'local.email' :  user.local.email }, (err, user) => {
 
     // if there are any errors, return the error
@@ -96,15 +98,18 @@ utils.addFavToUser = (res, user, movieID) => {
     if (!user) throw new Error('No such user was found');
 
     user.favourites.push(movieID);
-    user.save((err) => {
-      if (err) throw err;
-      res.send({status: 200});
-    });
+    user.save()
+      .then(() => { res.send({ status: 200 }); })
+      .catch(error => {
+        res.send({ status: 500, error });
+        throw error;
+      });
   });
 };
 
 
-utils.removeFavFromUser = (res, user, movieID) => {
+utils.removeFavFromUser = (req, res, user, movieID) => {
+  console.log(`- remove ${movieID} from favs of ${user.local.email}`);
   User.findOne({ 'local.email' :  user.local.email }, (err, user) => {
 
     // if there are any errors, return the error
@@ -114,11 +119,41 @@ utils.removeFavFromUser = (res, user, movieID) => {
     if (!user) throw new Error('No such user was found');
 
     user.favourites = user.favourites.filter(id => id != movieID);
-    user.save((err) => {
-      if (err) throw err;
-      res.send({status:200});
-    });
+    user.save()
+      .then(() => { res.send({ status: 200 }); })
+      .catch(error => {
+        res.send({ status: 500, error });
+        throw error;
+      });
   });
+};
+
+
+utils.addComment = (req, res, commentData) => {
+  console.log(`- add comment for ${commentData.movieID} from ${commentData.userID}`);
+  let comment = new Comment(commentData);
+  comment.save()
+    .then(() => { res.send({ status: 200 }); })
+    .catch(error => {
+      res.send({ status: 500 });
+      throw error;
+    });
+};
+
+
+utils.removeComment = (req, res, commentData) => {
+  console.log(`- remove comment for ${commentData.movieID} from ${commentData.userID}`);
+  let qObj = {
+    userID: commentData.userID,
+    movieID: commentData.movieID,
+    timestamp: commentData.timestamp
+  };
+  Comment.remove(qObj).exec()
+    .then(() => { res.send({ status: 200 }); })
+    .catch(error => { 
+      res.send({ status: 500 });
+      throw error;
+    });
 };
 
 

@@ -9,8 +9,8 @@ module.exports = (router, passport) => {
       .then(JSON.stringify)
       .then(data => res.send(data))
       .catch(error => {
-        res.send(error);
-        console.error(error);
+        res.send({ status: 500, error });
+        throw error;
       });
   });
 
@@ -23,40 +23,36 @@ module.exports = (router, passport) => {
         .then(JSON.stringify)
         .then(data => res.send(data))
         .catch(error => {
-          res.send(error);
-          console.error(error);
+          res.send({ status: 500, error });
+          throw error;
         });
       break;
 
     case 'addtofavs':
-      console.log(`- add ${req.params.movieID} to favs of ${req.user.local.email}`);
-      utils.addFavToUser(res, req.user, req.params.movieID);
+      utils.addFavToUser(req, res, req.user, req.params.movieID);
       break;
 
     case 'removefromfavs':
-      console.log(`- remove ${req.params.movieID} from favs of ${req.user.local.email}`);
-      utils.removeFavFromUser(res, req.user, req.params.movieID);
+      utils.removeFavFromUser(req, res, req.user, req.params.movieID);
       break;
 
     default:
-      utils.getMovieByID(req.query.i)
-        .then(JSON.stringify)
-        .then(data => res.send(data))
-        .catch(error => {
-          res.send(error);
-          console.error(error);
-        });
+      res.redirect('/');
+      throw new Error('Wrong request path');
     }
   });
 
 
   router.all('/status/:action', (req, res) => {
     switch (req.params.action) {
+
     case 'dbconnection':
       res.send({dbconnected: db.readyState});
       break;
+
     default:
-      res.send({dbconnected: db.readyState});
+      res.redirect('/');
+      throw new Error('Wrong request path');
     }
   });
 
@@ -93,7 +89,38 @@ module.exports = (router, passport) => {
         break;
 
       default:
-        res.send(req.user);
+        res.redirect('/');
+        throw new Error('Wrong request path');
+      }
+    }
+  );
+
+
+  router.all('/comments/:action', utils.isLoggedIn,
+    (req, res) => {
+      switch (req.params.action) {
+
+      case 'add':
+        if (!req.body.movieID || !req.body.text || !req.body.timestamp) {
+          res.send({ status: 500, message: 'Wrong request data' });
+          throw new Error('Wrong request data');
+        }
+        req.body.userID = req.user.local.email;
+        utils.addComment(req, res, req.body);
+        break;
+
+      case 'remove':
+        if (!req.body.movieID || !req.body.timestamp) {
+          res.send({ status: 500, message: 'Wrong request data' });
+          throw new Error('Wrong request data');
+        }
+        req.body.userID = req.user.local.email;
+        utils.removeComment(req, res, req.body);
+        break;
+
+      default:
+        res.redirect('/');
+        throw new Error('Wrong request path');
       }
     }
   );

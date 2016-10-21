@@ -24,9 +24,7 @@ angular.
             // }];
             this.movie.comments = movie.comments || [];
             this.movie.comments.forEach(comment => {
-              comment.timestampString =
-                `${comment.timestamp.getDate()<10?'0':''}${comment.timestamp.getDate()}.${comment.timestamp.getMonth()+1<10?'0':''}${comment.timestamp.getMonth()+1} ` +
-                `${comment.timestamp.getHours()}${!comment.timestamp.getHours()?'0':''}:${comment.timestamp.getMinutes()<10?'0':''}${comment.timestamp.getMinutes()}${!comment.timestamp.getMinutes()?'0':''}`;
+              comment.timestampString = this.getTimestampString(comment.timestamp);
             });
             this.movie.isFavourite = User.getFavourites().indexOf(movie.imdbID) != -1;
             const tableFields = ['Year', 'Released', 'Runtime', 'Genre', 'Writer', 'Actors', 'Language', 'Country', 'Awards', 'imdbRating', 'imdbVotes', 'Type'];
@@ -38,15 +36,52 @@ angular.
           });
         };
 
+        this.getTimestampString = timestamp =>
+          `${timestamp.getDate()<10?'0':''}${timestamp.getDate()}.${timestamp.getMonth()+1<10?'0':''}${timestamp.getMonth()+1} ` +
+          `${timestamp.getHours()}${!timestamp.getHours()?'0':''}:${timestamp.getMinutes()<10?'0':''}${timestamp.getMinutes()}${!timestamp.getMinutes()?'0':''}`;
+
+
         this.onCommentFormSubmit = (event) => {
           event.preventDefault();
-          Comments.serverRequest.add({
+          if (!this.commentText || !this.commentText.length) return;
+          let now = new Date();
+          let comment = {
             movieID: this.movie.imdbID,
-            commentText: this.commentText,
-            timestamp: new Date()
-          }, res => {
-            console.dir(res);
+            text: this.commentText,
+            timestamp: now,
+            user: User.get().local.email,
+            timestampString: this.getTimestampString(now)
+          };
+          this.addComment(comment);
+          this.commentText = '';
+        };
+
+        this.addComment = (comment) => {
+          Comments.serverRequest.add(comment, res => {
+            if (res.status != undefined) Notifications.add(res.status);
+            if (res.status != Notifications.codes.success) {
+              $log.error(res);
+            }
           });
+          this.movie.comments.push(comment);
+        };
+
+        this.onRemoveCommentClick = (event, comment) => {
+          event.preventDefault();
+          if (comment.user != User.get().local.email) return;
+          this.removeComment(comment);
+        };
+
+        this.removeComment = (comment) => {
+          Comments.serverRequest.remove(comment, res => {
+            if (res.status != undefined) Notifications.add(res.status);
+            if (res.status != Notifications.codes.success) {
+              $log.error(res);
+            }
+          });
+          this.movie.comments = this.movie.comments.filter(c =>
+            c.timestamp != comment.timestamp || c.userID != comment.userID
+          );
         };
 
         this.toggleFavourite = (event) => {
@@ -60,7 +95,7 @@ angular.
               if (res.status != Notifications.codes.success) {
                 movie.isFavourite = !movie.isFavourite;
                 User.removeFavourite(movie.imdbID);
-                return;
+                $log.error(res);
               }
             });
           } else {
@@ -70,7 +105,7 @@ angular.
               if (res.status != Notifications.codes.success) {
                 movie.isFavourite = !movie.isFavourite;
                 User.addFavourite(movie.imdbID);
-                return;
+                $log.error(res);
               }
             });
           }
@@ -129,8 +164,9 @@ angular.
                     </div>
                     <div class="media-body comment-body">
                       <span class="comment-timestamp">{{comment.timestampString}}</span>
+                      <span class="glyphicon glyphicon-remove comment-remove" aria-hidden="true" ng-click="$ctrl.onRemoveCommentClick($event, comment)"></span>
                       <h6 class="media-heading comment-heading">{{comment.user}}</h6>
-                      <p>{{comment.text}}</p>
+                      <p class="comment-text">{{comment.text}}</p>
                     </div>
                   </li>
                 </ul>

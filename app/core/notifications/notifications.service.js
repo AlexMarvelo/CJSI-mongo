@@ -12,7 +12,8 @@ angular.
         remoteSourse: 3,
         unauthorized: 4,
         nopermission: 5,
-        success: 200
+        success: 200,
+        serverError: 500
       };
 
       this.notifications = [];
@@ -68,6 +69,13 @@ angular.
             msg: 'Server request was executed successfully',
             type: 'success',
             code: codes.success
+          };
+          break;
+        case codes.serverError:
+          newNotification = {
+            msg: 'Server request failed',
+            type: 'danger',
+            code: codes.serverError
           };
           break;
         }

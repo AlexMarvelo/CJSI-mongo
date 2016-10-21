@@ -4,21 +4,15 @@ angular.
   module('core.comments').
   factory('Comments', ['$resource', 'CONFIG',
     ($resource, CONFIG) => {
-      const serverRequest = $resource(`${CONFIG.appDomain}/comments/:movieID/:action`, {movieID: 0, action: 'get'}, {
-        get: {
-          method: 'GET',
-          params: {
-            action: 'get'
-          }
-        },
+      const serverRequest = $resource(`${CONFIG.appDomain}/comments/:action`, { action: 'add' }, {
         add: {
-          method: 'GET',
+          method: 'POST',
           params: {
             action: 'add'
           }
         },
         remove: {
-          method: 'GET',
+          method: 'POST',
           params: {
             action: 'remove'
           }

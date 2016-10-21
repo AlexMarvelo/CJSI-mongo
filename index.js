@@ -49,7 +49,6 @@ require('./routes/routes')(app, passport);
 app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
   if (!err) return;
   console.error(err);
-  res.redirect('/');
 });
 
 module.exports = app;
