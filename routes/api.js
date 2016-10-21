@@ -20,6 +20,7 @@ module.exports = (router, passport) => {
 
     case 'get':
       utils.getMovieByID(req.params.movieID)
+        .then(movie => utils.loadCommentsToMovie(movie))
         .then(JSON.stringify)
         .then(data => res.send(data))
         .catch(error => {
@@ -98,24 +99,29 @@ module.exports = (router, passport) => {
 
   router.all('/comments/:action', utils.isLoggedIn,
     (req, res) => {
+      let comment = req.body;
       switch (req.params.action) {
 
       case 'add':
-        if (!req.body.movieID || !req.body.text || !req.body.timestamp) {
+        if (!comment.movieID || !comment.timestamp || !comment.text) {
           res.send({ status: 500, message: 'Wrong request data' });
           throw new Error('Wrong request data');
         }
-        req.body.userID = req.user.local.email;
-        utils.addComment(req, res, req.body);
+        comment.userID = req.user.local.email;
+        utils.addComment(req, res, comment);
         break;
 
       case 'remove':
-        if (!req.body.movieID || !req.body.timestamp) {
+        if (!comment.movieID || !comment.timestamp) {
           res.send({ status: 500, message: 'Wrong request data' });
           throw new Error('Wrong request data');
         }
-        req.body.userID = req.user.local.email;
-        utils.removeComment(req, res, req.body);
+        if (comment.userID != req.user.local.email) {
+          res.send({ status: 5, message: 'Permision denied' });
+          throw new Error('Permision denied');
+        }
+        comment.userID = req.user.local.email;
+        utils.removeComment(req, res, comment);
         break;
 
       default:

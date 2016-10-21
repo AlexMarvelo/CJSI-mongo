@@ -13,18 +13,9 @@ angular.
         this.$onInit = () => {
           Movie.serverRequest.get({movieID: $stateParams.movieID}, (movie) => {
             this.movie = movie;
-            // this.movie.comments = movie.comments || [{
-            //   user: 'admin@admin.com',
-            //   text: 'Nice movie! Recommend',
-            //   timestamp: new Date()
-            // }, {
-            //   user: 'admin@gmail.com',
-            //   text: 'Didn\'t like it(((',
-            //   timestamp: new Date()
-            // }];
             this.movie.comments = movie.comments || [];
             this.movie.comments.forEach(comment => {
-              comment.timestampString = this.getTimestampString(comment.timestamp);
+              comment.timestampString = this.getTimestampString(new Date(comment.timestamp));
             });
             this.movie.isFavourite = User.getFavourites().indexOf(movie.imdbID) != -1;
             const tableFields = ['Year', 'Released', 'Runtime', 'Genre', 'Writer', 'Actors', 'Language', 'Country', 'Awards', 'imdbRating', 'imdbVotes', 'Type'];
@@ -68,7 +59,7 @@ angular.
 
         this.onRemoveCommentClick = (event, comment) => {
           event.preventDefault();
-          if (comment.user != User.get().local.email) return;
+          if (comment.userID != User.get().local.email) return;
           this.removeComment(comment);
         };
 
@@ -165,7 +156,7 @@ angular.
                     <div class="media-body comment-body">
                       <span class="comment-timestamp">{{comment.timestampString}}</span>
                       <span class="glyphicon glyphicon-remove comment-remove" aria-hidden="true" ng-click="$ctrl.onRemoveCommentClick($event, comment)"></span>
-                      <h6 class="media-heading comment-heading">{{comment.user}}</h6>
+                      <h6 class="media-heading comment-heading">{{comment.userID}}</h6>
                       <p class="comment-text">{{comment.text}}</p>
                     </div>
                   </li>

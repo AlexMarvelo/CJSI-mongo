@@ -43,6 +43,18 @@ utils.getMovieByID = (id) => {
 };
 
 
+utils.loadCommentsToMovie = (movie) => {
+  let qObj = {
+    movieID: movie.imdbID,
+  };
+  return Comment.find(qObj).sort({timestamp: -1}).exec()
+    .then(comments => {
+      movie.comments = comments;
+      return movie;
+    });
+};
+
+
 utils.getSearchRequestData = (qObj) => {
   if (!db.readyState) return utils.getRequestedDataFromOMDb(`/${utils.getQString(qObj)}`);
 
@@ -150,7 +162,7 @@ utils.removeComment = (req, res, commentData) => {
   };
   Comment.remove(qObj).exec()
     .then(() => { res.send({ status: 200 }); })
-    .catch(error => { 
+    .catch(error => {
       res.send({ status: 500 });
       throw error;
     });
