@@ -61,7 +61,7 @@ module.exports = (router, passport) => {
   });
 
 
-  router.post('/user/login',
+  router.post('/user/login', utils.isLoggedOut,
     passport.authenticate('local-login', {
       failureFlash : true
     }),
@@ -70,7 +70,7 @@ module.exports = (router, passport) => {
     }
   );
 
-  router.post('/user/signup',
+  router.post('/user/signup', utils.isLoggedOut,
     passport.authenticate('local-signup', {
       failureFlash : true
     }),

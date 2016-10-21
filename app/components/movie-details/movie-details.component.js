@@ -13,15 +13,16 @@ angular.
         this.$onInit = () => {
           Movie.serverRequest.get({movieID: $stateParams.movieID}, (movie) => {
             this.movie = movie;
-            this.movie.comments = movie.comments || [{
-              user: 'admin@admin.com',
-              text: 'Nice movie! Recommend',
-              timestamp: new Date()
-            }, {
-              user: 'admin@gmail.com',
-              text: 'Didn\'t like it(((',
-              timestamp: new Date()
-            }];
+            // this.movie.comments = movie.comments || [{
+            //   user: 'admin@admin.com',
+            //   text: 'Nice movie! Recommend',
+            //   timestamp: new Date()
+            // }, {
+            //   user: 'admin@gmail.com',
+            //   text: 'Didn\'t like it(((',
+            //   timestamp: new Date()
+            // }];
+            this.movie.comments = movie.comments || [];
             this.movie.comments.forEach(comment => {
               comment.timestampString =
                 `${comment.timestamp.getDate()<10?'0':''}${comment.timestamp.getDate()}.${comment.timestamp.getMonth()+1<10?'0':''}${comment.timestamp.getMonth()+1} ` +
@@ -119,6 +120,7 @@ angular.
               <div class="panel-heading"><h4>Comments</h4></div>
               <div class="panel-body">
                 <ul class="media-list">
+                  {{!$ctrl.movie.comments.length ? 'No comments yet' : ''}}
                   <li class="media comment" ng-repeat="comment in $ctrl.movie.comments">
                     <div class="media-left">
                       <a href="#">
