@@ -9,10 +9,6 @@ require('./theme/css/heroic-features.css');
 window.jQuery = require('jquery');
 require('../node_modules/bootstrap/dist/js/bootstrap.js');
 
-// Import utils
-require('./utils/findAncestor');
-require('./utils/indexOfByProp');
-
 // Import modules
 require('./core/core.module');
 require('./components/navbar/navbar.module');
