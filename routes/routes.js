@@ -28,7 +28,7 @@ module.exports = function(app, passport) {
 
   // catch 404 and forward to error handler
   app.use((req, res, next) => {
-    let err = new Error('Not Found');
+    let err = new Error('Page not found');
     err.status = 404;
     res.redirect('/');
     next(err);

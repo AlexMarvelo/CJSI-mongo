@@ -47,7 +47,7 @@ utils.loadCommentsToMovie = (movie) => {
   let qObj = {
     movieID: movie.imdbID,
   };
-  return Comment.find(qObj).sort({timestamp: -1}).exec()
+  return Comment.find(qObj).sort({timestamp: 1}).exec()
     .then(comments => {
       movie.comments = comments;
       return movie;
@@ -101,19 +101,27 @@ utils.getRequestedDataFromOMDb = (query) => {
 
 utils.addFavToUser = (req, res, user, movieID) => {
   console.log(`- add ${movieID} to favs of ${user.local.email}`);
-  User.findOne({ 'local.email' :  user.local.email }, (err, user) => {
+  User.findOne({ 'local.email' :  user.local.email }, (error, user) => {
 
     // if there are any errors, return the error
-    if (err) throw err;
+    if (error) {
+      error.status = 500;
+      res.send(error);
+      throw error;
+    }
 
     // check to see if theres already a user with that email
-    if (!user) throw new Error('No such user was found');
+    if (!user) {
+      res.send({ status: 400, message: 'No such user was found' });
+      throw new Error('No such user was found');
+    }
 
     user.favourites.push(movieID);
     user.save()
       .then(() => { res.send({ status: 200 }); })
       .catch(error => {
-        res.send({ status: 500, error });
+        error.status = 500;
+        res.send(error);
         throw error;
       });
   });
@@ -122,19 +130,27 @@ utils.addFavToUser = (req, res, user, movieID) => {
 
 utils.removeFavFromUser = (req, res, user, movieID) => {
   console.log(`- remove ${movieID} from favs of ${user.local.email}`);
-  User.findOne({ 'local.email' :  user.local.email }, (err, user) => {
+  User.findOne({ 'local.email' :  user.local.email }, (error, user) => {
 
     // if there are any errors, return the error
-    if (err) throw err;
+    if (error) {
+      error.status = 500;
+      res.send(error);
+      throw error;
+    }
 
     // check to see if theres already a user with that email
-    if (!user) throw new Error('No such user was found');
+    if (!user) {
+      res.send({ status: 400, message: 'No such user was found' });
+      throw new Error('No such user was found');
+    }
 
     user.favourites = user.favourites.filter(id => id != movieID);
     user.save()
       .then(() => { res.send({ status: 200 }); })
       .catch(error => {
-        res.send({ status: 500, error });
+        error.status = 500;
+        res.send(error);
         throw error;
       });
   });

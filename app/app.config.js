@@ -57,9 +57,9 @@ angular
         this.checkDBconnection = () => {
           Status.serverRequest.dbconnection(res => {
             if (!res.dbconnected) {
-              Notifications.add(Notifications.codes.dbConnectionCode);
+              Notifications.add(Notifications.codes.dbNotConnected);
             } else {
-              Notifications.remove(Notifications.codes.dbConnectionCode);
+              Notifications.remove(Notifications.codes.dbNotConnected);
             }
           });
         };

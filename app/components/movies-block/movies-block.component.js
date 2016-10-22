@@ -18,9 +18,8 @@ angular.
           Movies.getCurrentView,
           (newView) => {
             this.currentView = newView;
-            if (this.currentView.Response == 'False') {
-              Notifications.add(Notifications.codes.emptyResult);
-            } else {
+            Notifications.add(this.currentView.status);
+            if (this.currentView.status == Notifications.codes.success) {
               if (this.currentView.remoteSourse == true) Notifications.add(Notifications.codes.remoteSourse);
             }
             this.setPagination();
@@ -54,28 +53,37 @@ angular.
         this.toggleFavourite = (event, movie) => {
           event.preventDefault();
           if (!movie) return;
-          movie.isFavourite = !movie.isFavourite;
           if (movie.isFavourite) {
-            User.addFavourite(movie.imdbID);
-            Movie.serverRequest.addToFavs({ movieID: movie.imdbID }, (res) => {
-              if (res.status != undefined) Notifications.add(res.status);
-              if (res.status != Notifications.codes.success) {
-                movie.isFavourite = !movie.isFavourite;
-                User.removeFavourite(movie.imdbID);
-                return;
-              }
-            });
+            this.removeMovieFromFavourites(movie);
           } else {
-            User.removeFavourite(movie.imdbID);
-            Movie.serverRequest.removeFromFavs({ movieID: movie.imdbID }, (res) => {
-              if (res.status != undefined) Notifications.add(res.status);
-              if (res.status != Notifications.codes.success) {
-                movie.isFavourite = !movie.isFavourite;
-                User.addFavourite(movie.imdbID);
-                return;
-              }
-            });
+            this.addMovieToFavourites(movie);
           }
+        };
+
+        this.addMovieToFavourites = (movie) => {
+          movie.isFavourite = true;
+          User.addFavourite(movie.imdbID);
+          Movie.serverRequest.addToFavs({ movieID: movie.imdbID }, (res) => {
+            Notifications.add(res.status);
+            if (res.status != Notifications.codes.success) {
+              movie.isFavourite = false;
+              User.removeFavourite(movie.imdbID);
+              return;
+            }
+          });
+        };
+
+        this.removeMovieFromFavourites = (movie) => {
+          movie.isFavourite = false;
+          User.removeFavourite(movie.imdbID);
+          Movie.serverRequest.removeFromFavs({ movieID: movie.imdbID }, (res) => {
+            Notifications.add(res.status);
+            if (res.status != Notifications.codes.success) {
+              movie.isFavourite = true;
+              User.addFavourite(movie.imdbID);
+              return;
+            }
+          });
         };
       }
     ],

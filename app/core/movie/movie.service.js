@@ -12,13 +12,13 @@ angular.
           }
         },
         addToFavs: {
-          method: 'POST',
+          method: 'GET',
           params: {
             action: 'addtofavs'
           }
         },
         removeFromFavs: {
-          method: 'POST',
+          method: 'GET',
           params: {
             action: 'removefromfavs'
           }

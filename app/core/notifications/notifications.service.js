@@ -7,15 +7,17 @@ angular.
       // types: success, info, warning, danger
       const timeout = 4000;
       const codes = {
-        dbConnectionCode: 1,
-        emptyResult: 2,
-        remoteSourse: 3,
-        unauthorized: 4,
-        nopermission: 5,
         success: 200,
+        noContent: 204,
+        remoteSourse: 207,
+        badRequest: 400,
+        unauthorized: 401,
+        nopermission: 403,
+        notFound: 404,
         serverError: 500,
-        notFound: 404
+        dbNotConnected: 503,
       };
+      const disabled = ['success', 'remoteSourse'];
 
       this.notifications = [];
       this.notificationsLog = [];
@@ -30,18 +32,18 @@ angular.
         }
         let newNotification;
         switch (code) {
-        case codes.dbConnectionCode:
+        case codes.dbNotConnected:
           newNotification = {
             msg: 'Connection to local database failed. Remote one will be used',
             type: 'warning',
-            code: codes.dbConnectionCode
+            code: codes.dbNotConnected
           };
           break;
-        case codes.emptyResult:
+        case codes.noContent:
           newNotification = {
             msg: 'No movies were found, sorry',
             type: 'danger',
-            code: codes.emptyResult
+            code: codes.noContent
           };
           break;
         case codes.remoteSourse:
@@ -86,9 +88,16 @@ angular.
             code: codes.notFound
           };
           break;
+        case codes.badRequest:
+          newNotification = {
+            msg: 'The request could not be understood by the server',
+            type: 'danger',
+            code: codes.badRequest
+          };
+          break;
         }
         if (!newNotification) return;
-        if (newNotification.code == codes.success) return; // skip success notification
+        if (disabled.find(disabledKey => codes[disabledKey] == newNotification.code)) return;
         this.notifications.push(newNotification);
         this.notificationsLog.push(newNotification);
         $log.debug(`- add notification ${!notification ? '(code ' + code + ')' : ':'}`);

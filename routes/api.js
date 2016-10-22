@@ -3,9 +3,16 @@ const utils = require('./utils');
 
 module.exports = (router, passport) => {
 
-  // servises:
+  //
+  // search interface
+  //
+
   router.get('/search', utils.isLoggedIn, (req, res) => {
     utils.getSearchRequestData(req.query)
+      .then(result => {
+        result.status = result.Response == 'True' ? 200 : 204;
+        return result;
+      })
       .then(JSON.stringify)
       .then(data => res.send(data))
       .catch(error => {
@@ -16,7 +23,11 @@ module.exports = (router, passport) => {
   });
 
 
-  router.all('/movie/:movieID/:action', utils.isLoggedIn, function(req, res) {
+  //
+  // single movie interface
+  //
+
+  router.all('/movie/:movieID/:action', utils.isLoggedIn, (req, res) => {
     switch (req.params.action) {
 
     case 'get':
@@ -49,6 +60,10 @@ module.exports = (router, passport) => {
   });
 
 
+  //
+  // aplication status interface
+  //
+
   router.all('/status/:action', (req, res) => {
     switch (req.params.action) {
 
@@ -62,6 +77,10 @@ module.exports = (router, passport) => {
     }
   });
 
+
+  //
+  // user model interface
+  //
 
   router.post('/user/login', utils.isLoggedOut,
     passport.authenticate('local-login', {
@@ -102,6 +121,10 @@ module.exports = (router, passport) => {
   );
 
 
+  //
+  // comments model interface
+  //
+
   router.all('/comments/:action', utils.isLoggedIn,
     (req, res) => {
       let comment = req.body;
@@ -122,7 +145,7 @@ module.exports = (router, passport) => {
           throw new Error('Wrong request data');
         }
         if (comment.userID != req.user.local.email) {
-          res.send({ status: 5, message: 'Permision denied' });
+          res.send({ status: 403, message: 'Permision denied' });
           throw new Error('Permision denied');
         }
         comment.userID = req.user.local.email;

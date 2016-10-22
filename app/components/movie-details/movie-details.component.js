@@ -60,8 +60,9 @@ angular.
         };
 
         this.addComment = (comment) => {
+          $log.debug(`- add comment for ${comment.movieID} from ${User.get().local.email}`);
           Comments.serverRequest.add(comment, res => {
-            if (res.status != undefined) Notifications.add(res.status);
+            Notifications.add(res.status);
             if (res.status != Notifications.codes.success) {
               $log.error(res);
             }
@@ -77,8 +78,9 @@ angular.
         };
 
         this.removeComment = (comment) => {
+          $log.debug(`- remove comment for ${comment.movieID} from ${User.get().local.email}`);
           Comments.serverRequest.remove(comment, res => {
-            if (res.status != undefined) Notifications.add(res.status);
+            Notifications.add(res.status);
             if (res.status != Notifications.codes.success) {
               $log.error(res);
             }
@@ -109,7 +111,7 @@ angular.
           User.addFavourite(movie.imdbID);
           Movies.addFavourite(movie.imdbID);
           Movie.serverRequest.addToFavs({ movieID: movie.imdbID }, (res) => {
-            if (res.status != undefined) Notifications.add(res.status);
+            Notifications.add(res.status);
             if (res.status != Notifications.codes.success) {
               movie.isFavourite = !movie.isFavourite;
               User.removeFavourite(movie.imdbID);
@@ -125,7 +127,7 @@ angular.
           User.removeFavourite(movie.imdbID);
           Movies.removeFavourite(movie.imdbID);
           Movie.serverRequest.removeFromFavs({ movieID: movie.imdbID }, (res) => {
-            if (res.status != undefined) Notifications.add(res.status);
+            Notifications.add(res.status);
             if (res.status != Notifications.codes.success) {
               movie.isFavourite = !movie.isFavourite;
               User.addFavourite(movie.imdbID);
