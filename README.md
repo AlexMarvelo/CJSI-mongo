@@ -4,7 +4,7 @@ Hometask for Ciklum JS Internship Lesson 11
 This is a full-stack application based on [MEAN stack](http://mean.io/).
 It can fetch data from local database (there are only 3 'World War Z' films).
 If there are no results from local base, it uses [remote database](http://www.omdbapi.com/).
-Fetching data is available only after authorization via email and password;
+Fetching data is available only after authorization via email and password.
 User can add/remove movies to favourites list and add comments on single movie page. User can delete only his own comments.
 
 ---
@@ -28,4 +28,4 @@ npm i
 mongod
 npm start
 ```
-Then open *http://localhost:3000/* file in your browser
+Then open *http://localhost:3000/* in your browser
