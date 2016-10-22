@@ -11,13 +11,17 @@ body {
 .notifier-container {
   position: fixed;
   width: 100%;
-  top: 80px;
+  top: 70px;
   left: 0;
   z-index: 100;
+}
+.notifier-alert-container {
+  padding: 10px;
 }
 .notifier-alert {
   position: relative;
   padding-right: 30px;
+  margin-bottom: 0;
   box-shadow: 0 0 4px rgba(0,0,0,.4);
 }
 .notifier-alert .glyphicon-remove{
@@ -152,4 +156,36 @@ h1 {
   .col-sm-6:nth-child(2n+1) {
     clear: both;
   }
+}
+
+/*
+Animations
+*/
+.notifier-alert-container {
+  transition: 0.3s ease-out height, 0.3s ease-out opacity, 0.3s ease-out padding-top, 0.3s ease-out padding-bottom;
+}
+
+.notifier-alert-container.ng-enter,
+.notifier-alert-container.ng-move {
+  height: 0;
+  opacity: 0;
+  overflow: hidden;
+}
+
+.notifier-alert-container.ng-enter.ng-enter-active,
+.notifier-alert-container.ng-move.ng-move-active {
+  height: 72px;
+  opacity: 1;
+}
+
+.notifier-alert-container.ng-leave {
+  opacity: 1;
+  overflow: hidden;
+}
+
+.notifier-alert-container.ng-leave.ng-leave-active {
+  height: 0;
+  opacity: 0;
+  padding-top: 0;
+  padding-bottom: 0;
 }

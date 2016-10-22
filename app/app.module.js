@@ -21,6 +21,7 @@ require('./components/movie-details/movie-details.module');
 angular.module('OMDbHero', [
   require('angular-ui-router'),
   require('angular-local-storage'),
+  require('angular-animate'),
   'core',
   'navbar',
   'notifier',
