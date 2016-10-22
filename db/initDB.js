@@ -15,7 +15,7 @@ function initDB() {
     .then(amount => {
       if (amount) return;
       insertBaseData();
-      console.log('DB initialized successfully');
+      console.log('- DB initialized successfully');
     })
     .catch(error => { throw error; });
 }

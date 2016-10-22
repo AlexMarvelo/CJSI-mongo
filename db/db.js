@@ -8,16 +8,16 @@ const initDB = require('./initDB');
 mongoose.connect(dbConfig.url);
 
 db.on('disconnected', function() {
-  console.log('MongoDB disconnected');
+  console.log('- MongoDB disconnected');
   setTimeout(() => { mongoose.connect(dbConfig.url); }, dbConfig.reconnectInterval);
 });
 
 db.on('connected', function() {
-  console.log('MongoDB connected');
+  console.log('- MongoDB connected');
 });
 
 db.on('reconnected', function() {
-  console.log('MongoDB reconnected');
+  console.log('- MongoDB reconnected');
 });
 
 db.on('error', function() {
@@ -28,7 +28,7 @@ db.on('error', function() {
 });
 
 db.once('open', function() {
-  console.log('MongoDB opened');
+  console.log('- MongoDB opened');
   initDB();
 });
 
