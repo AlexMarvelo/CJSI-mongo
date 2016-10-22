@@ -80,6 +80,7 @@ angular.
           break;
         }
         if (!newNotification) return;
+        if (newNotification.code == codes.success) return; // skip success notification
         this.notifications.push(newNotification);
         this.notificationsLog.push(newNotification);
         $log.debug(`- add notification ${!notification ? '(code ' + code + ')' : ':'}`);
