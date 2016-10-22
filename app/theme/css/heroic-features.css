@@ -15,6 +15,16 @@ body {
   left: 0;
   z-index: 100;
 }
+.notifier-container > .container {
+  position: relative;
+}
+.notifier-centeredColumn {
+  position: absolute;
+  width: 100%;
+  max-width: 555px;
+  left: 50%;
+  transform: translateX(-50%);
+}
 .notifier-alert-container {
   padding: 10px;
 }
@@ -164,7 +174,6 @@ Animations
 .notifier-alert-container {
   transition: 0.3s ease-out height, 0.3s ease-out opacity, 0.3s ease-out padding-top, 0.3s ease-out padding-bottom;
 }
-
 .notifier-alert-container.ng-enter,
 .notifier-alert-container.ng-move {
   height: 0;

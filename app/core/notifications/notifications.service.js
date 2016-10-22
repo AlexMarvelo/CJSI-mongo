@@ -5,7 +5,7 @@ angular.
   factory('Notifications', ['$timeout', '$log',
     function($timeout, $log) {
       // types: success, info, warning, danger
-      const timeout = 4000;
+      const timeout = 40000;
       const codes = {
         success: 200,
         noContent: 204,
