@@ -29,3 +29,5 @@ mongod
 npm start
 ```
 Then open *http://localhost:3000/* in your browser
+
+![Application screenshot](http://heyalex.xyz/static/img/screenshot-mongo.png)
