@@ -98,21 +98,21 @@ angular.
         }
         if (!newNotification) return;
         if (disabled.find(disabledKey => codes[disabledKey] == newNotification.code)) return;
+        newNotification.timestamp = (new Date()).toISOString();
         this.notifications.push(newNotification);
         this.notificationsLog.push(newNotification);
         $log.debug(`- add notification ${!notification ? '(code ' + code + ')' : ':'}`);
         if (notification) $log.debug(notification);
-        $timeout(() => remove(newNotification.code), timeout);
+        $timeout(() => remove(newNotification), timeout);
       };
 
-      const remove = (code, index) => {
-        if (index != undefined) {
-          $log.debug(`- remove notification (index ${index})`);
-          this.notifications.splice(index, 1);
-          return;
+      const remove = (notification) => {
+        if (!notification || !notification.timestamp) return;
+        let prevAmount = this.notifications.length;
+        this.notifications = this.notifications.filter(n => n.timestamp != notification.timestamp);
+        if (prevAmount != this.notifications.length) {
+          $log.debug(`- remove notification (code ${notification.code}, timestamp ${notification.timestamp})`);
         }
-        $log.debug(`- remove notification (code ${code})`);
-        this.notifications = this.notifications.filter(n => n.code != code);
       };
 
       return {

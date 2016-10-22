@@ -11,6 +11,7 @@ angular.
 
         this.onSearchSubmit = (event, targetPage = 1) => {
           event.preventDefault();
+          if (!this.qstring || !this.qstring.length) return;
           Movies.loadMovies({
             qstring: this.qstring,
             qyear: this.qyear,
