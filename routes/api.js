@@ -9,7 +9,8 @@ module.exports = (router, passport) => {
       .then(JSON.stringify)
       .then(data => res.send(data))
       .catch(error => {
-        res.send({ status: 500, error });
+        error.status = 500;
+        res.send(error);
         throw error;
       });
   });
@@ -20,11 +21,15 @@ module.exports = (router, passport) => {
 
     case 'get':
       utils.getMovieByID(req.params.movieID)
+        .then(result => {
+          result.status = result.Response == 'True' ? 200 : 404;
+          return result;
+        })
         .then(movie => utils.loadCommentsToMovie(movie))
         .then(JSON.stringify)
         .then(data => res.send(data))
         .catch(error => {
-          res.send({ status: 500, error });
+          res.redirect('/');
           throw error;
         });
       break;

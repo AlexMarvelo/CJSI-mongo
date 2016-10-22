@@ -11,8 +11,15 @@ angular.
         this.tableDetails = {};
 
         this.$onInit = () => {
-          Movie.serverRequest.get({movieID: $stateParams.movieID}, (movie) => {
+          Movie.serverRequest.get({movieID: $stateParams.movieID}, (res) => {
+            Notifications.add(res.status);
+            if (res.status != Notifications.codes.success) {
+              res.isFound = false;
+              return;
+            }
+            let movie = res;
             this.movie = movie;
+            this.movie.isFound = true;
             this.movie.comments = movie.comments || [];
             this.movie.comments.forEach(comment => {
               comment.timestampString = this.getTimestampString(new Date(comment.timestamp));
@@ -131,7 +138,7 @@ angular.
     ],
 
     template: `
-      <div class="container">
+      <div class="container" ng-if="$ctrl.movie.isFound">
         <div class="row">
           <div class="col-sm-4 text-center">
             <img ng-src="{{$ctrl.movie.Poster !== 'N/A' ? $ctrl.movie.Poster : 'http://placehold.it/280x390'}}" class="movie-poster" alt="{{$ctrl.movie.Title}}">

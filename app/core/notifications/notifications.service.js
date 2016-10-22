@@ -13,7 +13,8 @@ angular.
         unauthorized: 4,
         nopermission: 5,
         success: 200,
-        serverError: 500
+        serverError: 500,
+        notFound: 404
       };
 
       this.notifications = [];
@@ -76,6 +77,13 @@ angular.
             msg: 'Server request failed',
             type: 'danger',
             code: codes.serverError
+          };
+          break;
+        case codes.notFound:
+          newNotification = {
+            msg: 'Page not found. What you are looking for?',
+            type: 'danger',
+            code: codes.notFound
           };
           break;
         }

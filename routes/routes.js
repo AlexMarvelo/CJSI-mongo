@@ -30,6 +30,7 @@ module.exports = function(app, passport) {
   app.use((req, res, next) => {
     let err = new Error('Not Found');
     err.status = 404;
+    res.redirect('/');
     next(err);
   });
 };
