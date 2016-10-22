@@ -3,8 +3,8 @@
 angular.
   module('movieDetails').
   component('movieDetails', {
-    controller: ['$scope', '$log', '$stateParams', 'Movie', 'User', 'Comments', 'Notifications',
-      function MovieDetailsCtrl($scope, $log, $stateParams, Movie, User, Comments, Notifications) {
+    controller: ['$scope', '$log', '$stateParams', 'Movie', 'Movies', 'User', 'Comments', 'Notifications',
+      function MovieDetailsCtrl($scope, $log, $stateParams, Movie, Movies, User, Comments, Notifications) {
         this.staticText = {
           tableHeader: 'Movie details',
         };
@@ -16,6 +16,7 @@ angular.
             this.movie.comments = movie.comments || [];
             this.movie.comments.forEach(comment => {
               comment.timestampString = this.getTimestampString(new Date(comment.timestamp));
+              comment.removeable = comment.userID == User.get().local.email;
             });
             this.movie.isFavourite = User.getFavourites().indexOf(movie.imdbID) != -1;
             const tableFields = ['Year', 'Released', 'Runtime', 'Genre', 'Writer', 'Actors', 'Language', 'Country', 'Awards', 'imdbRating', 'imdbVotes', 'Type'];
@@ -32,6 +33,10 @@ angular.
           `${timestamp.getHours()}${!timestamp.getHours()?'0':''}:${timestamp.getMinutes()<10?'0':''}${timestamp.getMinutes()}${!timestamp.getMinutes()?'0':''}`;
 
 
+        //
+        // comments handling
+        //
+
         this.onCommentFormSubmit = (event) => {
           event.preventDefault();
           if (!this.commentText || !this.commentText.length) return;
@@ -40,7 +45,7 @@ angular.
             movieID: this.movie.imdbID,
             text: this.commentText,
             timestamp: now,
-            user: User.get().local.email,
+            userID: User.get().local.email,
             timestampString: this.getTimestampString(now)
           };
           this.addComment(comment);
@@ -54,6 +59,7 @@ angular.
               $log.error(res);
             }
           });
+          comment.removeable = true;
           this.movie.comments.push(comment);
         };
 
@@ -75,31 +81,51 @@ angular.
           );
         };
 
+
+        //
+        // favourites handling
+        //
+
         this.toggleFavourite = (event) => {
           event.preventDefault();
-          let movie = this.movie;
-          movie.isFavourite = !movie.isFavourite;
-          if (movie.isFavourite) {
-            User.addFavourite(movie.imdbID);
-            Movie.serverRequest.addToFavs({ movieID: movie.imdbID }, (res) => {
-              if (res.status != undefined) Notifications.add(res.status);
-              if (res.status != Notifications.codes.success) {
-                movie.isFavourite = !movie.isFavourite;
-                User.removeFavourite(movie.imdbID);
-                $log.error(res);
-              }
-            });
+          if (this.movie.isFavourite) {
+            this.removeMovieFromFavourites();
           } else {
-            User.removeFavourite(movie.imdbID);
-            Movie.serverRequest.removeFromFavs({ movieID: movie.imdbID }, (res) => {
-              if (res.status != undefined) Notifications.add(res.status);
-              if (res.status != Notifications.codes.success) {
-                movie.isFavourite = !movie.isFavourite;
-                User.addFavourite(movie.imdbID);
-                $log.error(res);
-              }
-            });
+            this.addMovieToFavourites();
           }
+        };
+
+
+        this.addMovieToFavourites = () => {
+          let movie = this.movie;
+          movie.isFavourite = true;
+          User.addFavourite(movie.imdbID);
+          Movies.addFavourite(movie.imdbID);
+          Movie.serverRequest.addToFavs({ movieID: movie.imdbID }, (res) => {
+            if (res.status != undefined) Notifications.add(res.status);
+            if (res.status != Notifications.codes.success) {
+              movie.isFavourite = !movie.isFavourite;
+              User.removeFavourite(movie.imdbID);
+              Movies.removeFavourite(movie.imdbID);
+              $log.error(res);
+            }
+          });
+        };
+
+        this.removeMovieFromFavourites = () => {
+          let movie = this.movie;
+          movie.isFavourite = false;
+          User.removeFavourite(movie.imdbID);
+          Movies.removeFavourite(movie.imdbID);
+          Movie.serverRequest.removeFromFavs({ movieID: movie.imdbID }, (res) => {
+            if (res.status != undefined) Notifications.add(res.status);
+            if (res.status != Notifications.codes.success) {
+              movie.isFavourite = !movie.isFavourite;
+              User.addFavourite(movie.imdbID);
+              Movies.addFavourite(movie.imdbID);
+              $log.error(res);
+            }
+          });
         };
       }
     ],
@@ -155,7 +181,7 @@ angular.
                     </div>
                     <div class="media-body comment-body">
                       <span class="comment-timestamp">{{comment.timestampString}}</span>
-                      <span class="glyphicon glyphicon-remove comment-remove" aria-hidden="true" ng-click="$ctrl.onRemoveCommentClick($event, comment)"></span>
+                      <span ng-if="comment.removeable" class="glyphicon glyphicon-remove comment-remove" aria-hidden="true" ng-click="$ctrl.onRemoveCommentClick($event, comment)"></span>
                       <h6 class="media-heading comment-heading">{{comment.userID}}</h6>
                       <p class="comment-text">{{comment.text}}</p>
                     </div>

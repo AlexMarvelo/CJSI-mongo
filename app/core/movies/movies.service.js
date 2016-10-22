@@ -4,7 +4,11 @@ angular.
   module('core.movies').
   factory('Movies', ['$resource', 'User', 'CONFIG',
     function($resource, User, CONFIG) {
-      this.currentView = {};
+      this.currentView = {
+        currentPage: 1,
+        Search: [],
+        totalResults: 0
+      };
       const getCurrentView = () => this.currentView;
       const setCurrentView = currentView => {this.currentView = currentView;};
 
@@ -18,6 +22,23 @@ angular.
         }
       });
 
+      const updateFavourites = () => {
+        const favourites = User.getFavourites();
+        this.currentView.Search.forEach(movie => {
+          if (favourites.indexOf(movie.imdbID) != -1) {
+            movie.isFavourite = true;
+          }
+        });
+      };
+
+      const addFavourite = movieID => {
+        this.currentView.Search.find(movie => movie.imdbID == movieID).isFavourite = true;
+      };
+
+      const removeFavourite = movieID => {
+        this.currentView.Search.find(movie => movie.imdbID == movieID).isFavourite = false;
+      };
+
       const loadMovies = (qObj, targetPage = 1) => {
         if (qObj) this.currentQuery = qObj;
         serverRequest.query({
@@ -26,20 +47,15 @@ angular.
           type: this.currentQuery.qtype,
           page: targetPage
         }, (currentView) => {
-          if (currentView.Response == 'True') {
-            currentView.currentPage = targetPage;
-            let favs = User.getFavourites();
-            currentView.Search.forEach(movie => {
-              if (favs.indexOf(movie.imdbID) != -1) {
-                movie.isFavourite = true;
-              }
-            });
-          } else {
-            currentView.currentPage = 1;
-            currentView.Search = [];
-            currentView.totalResults = 0;
-          }
           this.currentView = currentView;
+          if (this.currentView.Response == 'True') {
+            this.currentView.currentPage = targetPage;
+            updateFavourites();
+          } else {
+            this.currentView.currentPage = 1;
+            this.currentView.Search = [];
+            this.currentView.totalResults = 0;
+          }
         });
       };
 
@@ -49,7 +65,10 @@ angular.
         getCurrentView,
         setCurrentView,
         getCurrentQuery,
-        setCurrentQuery
+        setCurrentQuery,
+        updateFavourites,
+        addFavourite,
+        removeFavourite
       };
     }
   ]);

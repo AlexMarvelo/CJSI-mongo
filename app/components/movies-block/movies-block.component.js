@@ -10,6 +10,7 @@ angular.
         };
 
         this.$onInit = () => {
+          this.currentView = Movies.getCurrentView();
           this.setPagination();
         };
 
