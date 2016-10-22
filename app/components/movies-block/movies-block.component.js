@@ -9,11 +9,6 @@ angular.
           Search: []
         };
 
-        this.$onInit = () => {
-          this.currentView = Movies.getCurrentView();
-          this.setPagination();
-        };
-
         $scope.$watch(
           Movies.getCurrentView,
           (newView) => {

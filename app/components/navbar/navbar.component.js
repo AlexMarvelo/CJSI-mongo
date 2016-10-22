@@ -3,8 +3,8 @@
 angular.
   module('navbar').
   component('navbar', {
-    controller: ['$scope', '$state', '$log', 'CONFIG', 'User',
-      function NavbarCtrl($scope, $state, $log, CONFIG, User) {
+    controller: ['$scope', '$state', '$log', 'CONFIG', 'User', 'Movies',
+      function NavbarCtrl($scope, $state, $log, CONFIG, User, Movies) {
         this.static = {
           homeBtn: {
             link: '/',
@@ -27,6 +27,10 @@ angular.
           }
         };
 
+        this.$onInit = () => {
+          this.logined = false;
+        };
+
         $scope.$watch(User.authorized, (newValue) => {
           this.logined = newValue;
           this.user = User.get();
@@ -37,6 +41,7 @@ angular.
           User.serverRequest.logout(() => {
             $log.debug('- logged out');
             User.clear();
+            Movies.resetCurrentView();
             $state.go('login');
           });
         };
@@ -56,11 +61,11 @@ angular.
             <a class="navbar-brand" ui-sref="{{$ctrl.static.homeBtn.state}}">{{$ctrl.static.homeBtn.title}}</a>
           </div>
           <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav navbar-right" ng-switch on="$ctrl.logined">
-              <li ng-switch-when="true"><a>Hello, {{$ctrl.user.local.email}}</a></li>
-              <li ng-switch-when="true"><a href="#" ng-click="$ctrl.logout($event)">{{$ctrl.static.logoutBtn.title}}</a></li>
-              <li ng-switch-default><a ui-sref="{{$ctrl.static.loginBtn.state}}">{{$ctrl.static.loginBtn.title}}</a></li>
-              <li ng-switch-default><a ui-sref="{{$ctrl.static.signupBtn.state}}">{{$ctrl.static.signupBtn.title}}</a></li>
+            <ul class="nav navbar-nav navbar-right">
+              <li ng-if="$ctrl.logined == true">  <a>Hello, {{$ctrl.user.local.email}}</a></li>
+              <li ng-if="$ctrl.logined == true">  <a href="#" ng-click="$ctrl.logout($event)">{{$ctrl.static.logoutBtn.title}}</a></li>
+              <li ng-if="$ctrl.logined == false"> <a ui-sref="{{$ctrl.static.loginBtn.state}}">{{$ctrl.static.loginBtn.title}}</a></li>
+              <li ng-if="$ctrl.logined == false"> <a ui-sref="{{$ctrl.static.signupBtn.state}}">{{$ctrl.static.signupBtn.title}}</a></li>
             </ul>
           </div>
         </div>

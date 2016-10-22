@@ -4,13 +4,15 @@ angular.
   module('core.movies').
   factory('Movies', ['$resource', '$log', 'User', 'CONFIG',
     function($resource, $log, User, CONFIG) {
-      this.currentView = {
+      const defaultView = {
         currentPage: 1,
         Search: [],
         totalResults: 0
       };
       const getCurrentView = () => this.currentView;
-      const setCurrentView = currentView => {this.currentView = currentView;};
+      const setCurrentView = currentView => { this.currentView = currentView; };
+      const resetCurrentView = () => { this.currentView = defaultView; };
+      resetCurrentView();
 
       this.currentQuery = {};
       const getCurrentQuery = () => this.currentQuery;
@@ -65,6 +67,7 @@ angular.
         loadMovies,
         getCurrentView,
         setCurrentView,
+        resetCurrentView,
         getCurrentQuery,
         setCurrentQuery,
         updateFavourites,
