@@ -30,7 +30,7 @@ angular.
 
         this.getTimestampString = timestamp =>
           `${timestamp.getDate()<10?'0':''}${timestamp.getDate()}.${timestamp.getMonth()+1<10?'0':''}${timestamp.getMonth()+1} ` +
-          `${timestamp.getHours()}${!timestamp.getHours()?'0':''}:${timestamp.getMinutes()<10?'0':''}${timestamp.getMinutes()}${!timestamp.getMinutes()?'0':''}`;
+          `${!timestamp.getHours()<10?'0':''}${timestamp.getHours()}:${timestamp.getMinutes()<10?'0':''}${timestamp.getMinutes()}`;
 
 
         //
