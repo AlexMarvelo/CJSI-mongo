@@ -2,8 +2,8 @@
 
 angular.
   module('core.movies').
-  factory('Movies', ['$resource', 'User', 'CONFIG',
-    function($resource, User, CONFIG) {
+  factory('Movies', ['$resource', '$log', 'User', 'CONFIG',
+    function($resource, $log, User, CONFIG) {
       this.currentView = {
         currentPage: 1,
         Search: [],
@@ -41,6 +41,7 @@ angular.
 
       const loadMovies = (qObj, targetPage = 1) => {
         if (qObj) this.currentQuery = qObj;
+        $log.debug(`- execute search: s=${this.currentQuery.qstring}${this.currentQuery.qyear ? ', year=' + this.currentQuery.qyear : ''}${this.currentQuery.qtype ? ', type=' + this.currentQuery.qtype : ''}, page=${targetPage}`);
         serverRequest.query({
           s: this.currentQuery.qstring,
           y: this.currentQuery.qyear,

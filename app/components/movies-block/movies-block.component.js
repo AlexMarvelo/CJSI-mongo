@@ -17,8 +17,9 @@ angular.
         $scope.$watch(
           Movies.getCurrentView,
           (newView) => {
+            let isNewRequest = this.currentView.Search.length !== 0;
             this.currentView = newView;
-            Notifications.add(this.currentView.status);
+            if (isNewRequest) Notifications.add(this.currentView.status);
             if (this.currentView.status == Notifications.codes.success) {
               if (this.currentView.remoteSourse == true) Notifications.add(Notifications.codes.remoteSourse);
             }
