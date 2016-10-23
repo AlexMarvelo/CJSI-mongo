@@ -35,14 +35,14 @@ angular.
       const authorized = () => this.user != undefined;
 
       const init = () => {
-        this.user = localStorageService.get('user') || false;
+        this.user = localStorageService.get('user') || undefined;
         update();
       };
 
       const update = () => {
         serverRequest.get(user => {
           if (user.local == undefined) {
-            this.user = false;
+            this.user = undefined;
             return;
           }
           this.user = user;
