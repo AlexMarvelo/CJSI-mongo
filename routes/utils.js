@@ -1,3 +1,5 @@
+'use strict';
+
 const fetch = require('node-fetch');
 const OMDbURL = require('../config/app.config.json').remoteBaseURL;
 const dbConnection = require('../db/db')().getDBconnection();

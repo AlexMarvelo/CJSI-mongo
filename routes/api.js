@@ -1,3 +1,5 @@
+'use strict';
+
 const dbConnection = require('../db/db')().getDBconnection();
 const utils = require('./utils');
 

@@ -1,3 +1,5 @@
+'use strict';
+
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 const dbConfig = require('./db.config.json');

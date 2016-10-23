@@ -1,3 +1,5 @@
+'use strict';
+
 const Movie = require('../models/movie');
 const data = require('./initData.json');
 
