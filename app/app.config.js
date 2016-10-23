@@ -78,7 +78,7 @@ angular
 
     .constant('CONFIG', {
       'moviesPerPage': 10,
-      'appDomain': 'http://localhost:3000',
+      'appDomain': 'https://omdbhero.herokuapp.com',
       'omdbAPI': '6f0a67d0',
       'appName': 'OMDb Hero'
     });
