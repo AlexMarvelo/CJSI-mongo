@@ -7,6 +7,8 @@ If there are no results from local base, it uses [remote database](http://www.om
 Fetching data is available only after authorization via email and password.
 User can add/remove movies to favourites list and add comments on single movie page. User can delete only his own comments.
 
+Application deployed on [Heroku server](omdbhero.herokuapp.com). Database is deployed using [mLab](mlab.com).
+
 ---
 
 ##### List of used technologies:
