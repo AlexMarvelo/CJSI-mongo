@@ -1,4 +1,4 @@
-const db = require('../db/db');
+const dbConnection = require('../db/db')().getDBconnection();
 const utils = require('./utils');
 
 module.exports = (router, passport) => {
@@ -68,7 +68,7 @@ module.exports = (router, passport) => {
     switch (req.params.action) {
 
     case 'dbconnection':
-      res.send({dbconnected: db.readyState});
+      res.send({dbconnected: dbConnection.readyState});
       break;
 
     default:

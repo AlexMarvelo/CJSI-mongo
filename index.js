@@ -10,9 +10,10 @@ const MongoStore  = require('connect-mongo')(session);
 const dbConfig = require('./db/db.config.json');
 const flash = require('connect-flash');
 
-require('./db/db');
-
 const app = express();
+app.set('env', 'development');
+
+require('./db/db')(app);
 
 require('./config/passport')(passport);
 
@@ -35,7 +36,7 @@ app.use(session({
   resave: true,
   // using store session on MongoDB using express-session + connect
   store: new MongoStore({
-    url: dbConfig.url,
+    url: app.get('env') == 'production' ? dbConfig.url_remote : dbConfig.url_local,
     collection: 'sessions'
   }),
   cookie: { secure: false }

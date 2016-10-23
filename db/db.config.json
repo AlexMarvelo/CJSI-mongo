@@ -1,4 +1,6 @@
 {
-  "url": "mongodb://localhost/omdb",
+  "url_local":  "mongodb://localhost/omdb",
+  "url_remote": "mongodb://dbadmin:dbadmin@ds061196.mlab.com:61196/omdb",
+  "optioins": {},
   "reconnectInterval": 2000
 }

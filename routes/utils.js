@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
 const OMDbURL = require('../config/app.config.json').remoteBaseURL;
-const db = require('../db/db');
+const dbConnection = require('../db/db')().getDBconnection();
 const Movie = require('../models/movie');
 const User = require('../models/user');
 const Comment = require('../models/comment');
@@ -56,7 +56,7 @@ utils.loadCommentsToMovie = (movie) => {
 
 
 utils.getSearchRequestData = (qObj) => {
-  if (!db.readyState) return utils.getRequestedDataFromOMDb(`/${utils.getQString(qObj)}`);
+  if (!dbConnection.readyState) return utils.getRequestedDataFromOMDb(`/${utils.getQString(qObj)}`);
 
   let dbQuery = {
     Title: new RegExp(`.*${qObj.s}.*`, 'i')
