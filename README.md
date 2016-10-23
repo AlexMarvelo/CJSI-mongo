@@ -26,6 +26,7 @@ Application deployed on [Heroku server](https://omdbhero.herokuapp.com). Databas
 ```
 git clone https://github.com/AlexMarvelo/CJSI-mongo.git
 cd CJSI-mongo
+git checkout dev
 npm i
 mongod
 npm start
